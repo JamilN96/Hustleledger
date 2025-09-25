@@ -1,20 +1,16 @@
-import { createRequire } from 'node:module';
-import { FlatCompat } from '@eslint/eslintrc';
-
-const require = createRequire(import.meta.url);
-const recommendedConfig = require('./config/eslint/eslint-recommended.cjs');
-import reactPlugin from 'eslint-plugin-react';
-import reactHooksPlugin from 'eslint-plugin-react-hooks';
-import reactNativePlugin from 'eslint-plugin-react-native';
+const { FlatCompat } = require('@eslint/eslintrc');
+const reactPlugin = require('eslint-plugin-react');
+const reactHooksPlugin = require('eslint-plugin-react-hooks');
+const reactNativePlugin = require('eslint-plugin-react-native');
 
 const compat = new FlatCompat({
-  baseDirectory: import.meta.dirname,
-  recommendedConfig
+  baseDirectory: __dirname,
+  recommendedConfig: require('./config/eslint/eslint-recommended.cjs')
 });
 
-export default [
+module.exports = [
   {
-    ignores: ['node_modules/**', 'android/**']
+    ignores: ['node_modules/**', 'android/**', 'vendor/**']
   },
   ...compat.config({
     extends: ['eslint:recommended']
@@ -35,7 +31,11 @@ export default [
         console: 'readonly',
         fetch: 'readonly',
         requestAnimationFrame: 'readonly',
-        require: 'readonly'
+        require: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        setInterval: 'readonly',
+        clearInterval: 'readonly'
       }
     },
     plugins: {
@@ -60,6 +60,21 @@ export default [
     }
   },
   {
+    files: ['**/__tests__/**/*.{js,jsx,ts,tsx}', '**/?(*.)+(spec|test).[jt]s?(x)'],
+    languageOptions: {
+      globals: {
+        describe: 'readonly',
+        it: 'readonly',
+        expect: 'readonly',
+        beforeAll: 'readonly',
+        beforeEach: 'readonly',
+        afterAll: 'readonly',
+        afterEach: 'readonly',
+        jest: 'readonly'
+      }
+    }
+  },
+  {
     files: ['babel.config.js'],
     languageOptions: {
       sourceType: 'script',
@@ -68,6 +83,24 @@ export default [
         require: 'readonly',
         __dirname: 'readonly',
         process: 'readonly'
+      }
+    }
+  },
+  {
+    files: [
+      '**/*.config.js',
+      '**/*.config.cjs',
+      '.eslintrc.js',
+      'scripts/**/*.js'
+    ],
+    languageOptions: {
+      sourceType: 'script',
+      globals: {
+        module: 'writable',
+        require: 'readonly',
+        __dirname: 'readonly',
+        process: 'readonly',
+        console: 'readonly'
       }
     }
   },
