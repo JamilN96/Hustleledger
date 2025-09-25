@@ -2,7 +2,7 @@
 import 'react-native-gesture-handler';
 import 'react-native-reanimated';
 
-import * as React from 'react';
+import React from 'react';
 import { StatusBar, View, Appearance } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
@@ -13,27 +13,21 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-<<<<<<< HEAD
-=======
 try {
   require('./app/config.local');
 } catch {
   // Optional local overrides for development only
 }
 
->>>>>>> 53fbc4eaf50aa56101b353f9eb128c405a27dff9
 import { useColors, radii } from './app/lib/theme';
+import { TransactionsProvider } from './app/lib/transactions';
 
 import SignIn from './app/screens/SignIn';
 import SignUp from './app/screens/SignUp';
 import AppLock from './app/screens/AppLock';
 import RootTabs from './app/navigation/RootTabs';
 import LinkBank from './app/screens/LinkBank';
-
-// Optional local config (silently ignored if missing)
-try {
-  require('./app/config.local');
-} catch {}
+import AddTransaction from './app/screens/AddTransaction';
 
 const Stack = createNativeStackNavigator();
 
@@ -49,10 +43,10 @@ export default function App() {
     roundness: radii.md,
     colors: {
       ...DefaultTheme.colors,
-      primary: colors.primary,    // accent color from theme
+      primary: colors.primary,
       onSurface: colors.text,
       surface: 'transparent',
-      background: colors.background,
+      background: colors.background ?? colors.bg,
     },
   };
 
@@ -68,38 +62,35 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <PaperProvider theme={theme}>
-        <StatusBar barStyle={barStyle} backgroundColor="transparent" translucent />
+      <TransactionsProvider>
+        <PaperProvider theme={theme}>
+          <StatusBar barStyle={barStyle} backgroundColor="transparent" translucent />
 
-        <LinearGradient
-          colors={gradient}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={{ flex: 1 }}
-        >
-          <View
-            style={{ flex: 1, backgroundColor: `${bgSecondary}AA` }}
-            accessibilityRole="summary"
-            accessibilityLabel="Premium neon backdrop"
+          <LinearGradient
+            colors={gradient}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={{ flex: 1 }}
           >
-            <NavigationContainer>
-<<<<<<< HEAD
-              <Stack.Navigator
-                screenOptions={{ headerShown: false, animation: 'fade_from_bottom' }}
-              >
-=======
-              <Stack.Navigator screenOptions={{ headerShown: false, animation: 'fade_from_bottom' }}>
->>>>>>> 53fbc4eaf50aa56101b353f9eb128c405a27dff9
-                <Stack.Screen name="SignIn" component={SignIn} />
-                <Stack.Screen name="SignUp" component={SignUp} />
-                <Stack.Screen name="AppLock" component={AppLock} />
-                <Stack.Screen name="RootTabs" component={RootTabs} />
-                <Stack.Screen name="LinkBank" component={LinkBank} />
-              </Stack.Navigator>
-            </NavigationContainer>
-          </View>
-        </LinearGradient>
-      </PaperProvider>
+            <View
+              style={{ flex: 1, backgroundColor: `${bgSecondary}AA` }}
+              accessibilityRole="summary"
+              accessibilityLabel="Premium neon backdrop"
+            >
+              <NavigationContainer>
+                <Stack.Navigator screenOptions={{ headerShown: false, animation: 'fade_from_bottom' }}>
+                  <Stack.Screen name="SignIn" component={SignIn} />
+                  <Stack.Screen name="SignUp" component={SignUp} />
+                  <Stack.Screen name="AppLock" component={AppLock} />
+                  <Stack.Screen name="RootTabs" component={RootTabs} />
+                  <Stack.Screen name="LinkBank" component={LinkBank} />
+                  <Stack.Screen name="AddTransaction" component={AddTransaction} />
+                </Stack.Navigator>
+              </NavigationContainer>
+            </View>
+          </LinearGradient>
+        </PaperProvider>
+      </TransactionsProvider>
     </SafeAreaProvider>
   );
 }

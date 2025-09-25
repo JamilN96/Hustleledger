@@ -35,7 +35,9 @@ export default [
         console: 'readonly',
         fetch: 'readonly',
         requestAnimationFrame: 'readonly',
-        require: 'readonly'
+        require: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly'
       }
     },
     plugins: {
@@ -58,6 +60,37 @@ export default [
       'react-native/no-unused-styles': 'error',
       'react-native/no-inline-styles': 'off'
     }
+  },
+  {
+    files: ['__tests__/**/*.js', '**/*.test.{js,jsx,ts,tsx}'],
+    languageOptions: {
+      globals: {
+        describe: 'readonly',
+        it: 'readonly',
+        test: 'readonly',
+        expect: 'readonly',
+        beforeAll: 'readonly',
+        afterAll: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
+        jest: 'readonly'
+      }
+    }
+  },
+  {
+    files: ['.eslintrc.js', 'scripts/**/*.js', 'vendor/**/*.js'],
+    languageOptions: {
+      sourceType: 'script',
+      globals: {
+        module: 'writable',
+        require: 'readonly',
+        process: 'readonly',
+        __dirname: 'readonly',
+        global: 'readonly',
+        console: 'readonly'
+      }
+    }
+
   },
   {
     files: ['babel.config.js'],
