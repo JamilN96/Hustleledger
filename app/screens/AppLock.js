@@ -20,7 +20,7 @@ export default function AppLock({ navigation }) {
         const isEnrolled = await LocalAuthentication.isEnrolledAsync();
         setAvailable(hasHardware);
         setEnrolled(isEnrolled);
-      } catch (e) {
+      } catch (_error) {
         // If anything fails, allow continue button
       } finally {
         setChecking(false);
@@ -42,7 +42,7 @@ export default function AppLock({ navigation }) {
       } else {
         Alert.alert('Locked', 'Authentication failed.');
       }
-    } catch (e) {
+    } catch (_error) {
       Alert.alert('Error', 'Could not start authentication.');
     }
   };

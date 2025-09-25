@@ -24,8 +24,8 @@ export default function SignUp({ navigation }) {
     try {
       await createUserWithEmailAndPassword(auth, email.trim(), pw);
       navigation.replace('AppLock');
-    } catch (e) {
-      setErr(e?.message || 'Sign up failed');
+    } catch (error) {
+      setErr(error?.message || 'Sign up failed');
     } finally {
       setLoading(false);
     }

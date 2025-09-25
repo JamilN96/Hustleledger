@@ -11,7 +11,7 @@ export default function HLButton({ title, onPress, style, disabled }) {
 
   React.useEffect(() => {
     glow.value = withRepeat(withTiming(1, { duration: 1800, easing: Easing.inOut(Easing.quad) }), -1, true);
-  }, []);
+  }, [glow]);
 
   const aStyle = useAnimatedStyle(() => ({
     shadowOpacity: glow.value * 0.7,

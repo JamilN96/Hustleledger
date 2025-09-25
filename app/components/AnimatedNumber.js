@@ -16,7 +16,7 @@ export default function AnimatedNumber({ value = 0, duration = 1200, style }) {
     // animate from 0 to 1 for each new value
     progress.value = 0;
     progress.value = withTiming(1, { duration });
-  }, [value]);
+  }, [duration, progress, value]);
 
   const animatedProps = useAnimatedProps(() => {
     // simple ease: 0..1 → 0..value

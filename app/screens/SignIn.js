@@ -18,7 +18,7 @@ export default function SignIn({ navigation }) {
       if (u) navigation.replace('AppLock');
     });
     return () => unsub();
-  }, []);
+  }, [navigation]);
 
   const onSignIn = async () => {
     setErr('');
@@ -26,8 +26,8 @@ export default function SignIn({ navigation }) {
     try {
       await signInWithEmailAndPassword(auth, email.trim(), pw);
       navigation.replace('AppLock');
-    } catch (e) {
-      setErr(e.message || 'Sign in failed');
+    } catch (error) {
+      setErr(error.message || 'Sign in failed');
     } finally {
       setLoading(false);
     }

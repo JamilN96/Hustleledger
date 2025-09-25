@@ -6,15 +6,18 @@ import { Provider as PaperProvider, MD3LightTheme as DefaultTheme } from 'react-
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-
-try { require('./app/config.local'); } catch (e) {}
-
 import { useColors, radii } from './app/lib/theme';
 import SignIn from './app/screens/SignIn';
 import SignUp from './app/screens/SignUp';
 import AppLock from './app/screens/AppLock';
 import RootTabs from './app/navigation/RootTabs';
 import LinkBank from './app/screens/LinkBank';
+
+try {
+  require('./app/config.local');
+} catch (_error) {
+  // optional local config is ignored when missing
+}
 
 const Stack = createNativeStackNavigator();
 

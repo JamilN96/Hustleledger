@@ -21,10 +21,12 @@ const light = {
   danger: '#E03A56',
 };
 
-export const radii = { xl: 28, lg: 20, md: 14 };
-export const spacing = (n = 1) => 8 * n;
-
-export const useColors = () => {
+const resolveColors = () => {
   const scheme = Appearance.getColorScheme() || 'dark';
   return scheme === 'dark' ? dark : light;
 };
+
+export const colors = resolveColors();
+export const radii = { xl: 28, lg: 20, md: 14 };
+export const spacing = (n = 1) => 8 * n;
+export const useColors = () => resolveColors();

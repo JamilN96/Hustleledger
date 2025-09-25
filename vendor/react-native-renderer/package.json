@@ -1,0 +1,7 @@
+{
+  "name": "react-native-renderer",
+  "version": "19.1.0",
+  "main": "index.js",
+  "react-native": "index.js",
+  "license": "MIT"
+}
