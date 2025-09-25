@@ -1,11 +1,13 @@
 // app/screens/AppLock.js
 import React, { useEffect, useState } from 'react';
 import { View, Alert, Platform } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { Text } from 'react-native-paper';
 import GlassCard from '../components/GlassCard';
 import HLButton from '../components/HLButton';
-import { useColors, spacing } from '../lib/theme';
+import { useColors, spacing, radii } from '../lib/theme';
 
 export default function AppLock({ navigation }) {
   const colors = useColors();
@@ -50,34 +52,52 @@ export default function AppLock({ navigation }) {
   // If device can’t do biometrics, let them continue (still premium UX)
   const continueWithoutBiometrics = () => navigation.replace('RootTabs');
 
+  const content = (
+    <GlassCard accessibilityLabel="App lock status">
+      <LinearGradient
+        colors={[colors.accent1 + '33', colors.accent2 + '22']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{ borderRadius: radii.lg, padding: spacing(1.5), marginBottom: spacing(2) }}
+      >
+        <Text style={{ color: colors.text, fontSize: 20, fontWeight: '800' }}>Biometric shield</Text>
+        <Text style={{ color: colors.subtext, marginTop: spacing(1), lineHeight: 18 }}>
+          Ledger AI locks your data behind Face ID / Touch ID and bank-grade encryption.
+        </Text>
+      </LinearGradient>
+
+      <Text style={{ color: colors.subtext, marginBottom: spacing(2) }}>
+        {available
+          ? (enrolled
+            ? 'Use your biometrics to unlock command center.'
+            : 'Biometrics are available but not set up yet. You can continue without them.')
+          : 'Biometrics are not available on this device.'}
+      </Text>
+
+      {available && enrolled ? (
+        <HLButton title="Unlock with Face ID" onPress={tryAuth} accessibilityLabel="Unlock with biometrics" />
+      ) : (
+        <HLButton title="Continue without biometrics" onPress={continueWithoutBiometrics} accessibilityLabel="Continue without biometrics" />
+      )}
+    </GlassCard>
+  );
+
   if (checking) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', padding: spacing(2), backgroundColor: colors.bg }}>
-        <Text style={{ color: colors.text, textAlign: 'center' }}>Checking device security…</Text>
-      </View>
+      <SafeAreaView style={{ flex: 1 }}>
+        <View style={{ flex: 1, justifyContent: 'center', padding: spacing(2) }}>
+          {content}
+          <Text style={{ color: colors.subtext, marginTop: spacing(2), textAlign: 'center' }}>Checking device security…</Text>
+        </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', padding: spacing(2), backgroundColor: colors.bg }}>
-      <GlassCard>
-        <Text style={{ color: colors.text, fontSize: 20, fontWeight: '800', marginBottom: spacing(1) }}>
-          App Locked
-        </Text>
-        <Text style={{ color: colors.subtext, marginBottom: spacing(2) }}>
-          {available
-            ? (enrolled
-              ? 'Use Face ID / Touch ID to unlock.'
-              : 'Biometrics available, but not set up. You can continue without it.')
-            : 'Biometrics not available on this device.'}
-        </Text>
-
-        {available && enrolled ? (
-          <HLButton title="Unlock with Face ID" onPress={tryAuth} />
-        ) : (
-          <HLButton title="Continue without biometrics" onPress={continueWithoutBiometrics} />
-        )}
-      </GlassCard>
-    </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={{ flex: 1, justifyContent: 'center', padding: spacing(2) }}>
+        {content}
+      </View>
+    </SafeAreaView>
   );
 }

@@ -2,6 +2,7 @@ import 'react-native-gesture-handler';
 import 'react-native-reanimated';
 import * as React from 'react';
 import { StatusBar, View, Appearance } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Provider as PaperProvider, MD3LightTheme as DefaultTheme } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -45,8 +46,22 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <PaperProvider theme={theme}>
-        <StatusBar barStyle={Appearance.getColorScheme() === 'dark' ? 'light-content' : 'dark-content'} />
-        <View style={{ flex: 1, backgroundColor: colors.bg }}>
+        <StatusBar
+          barStyle={Appearance.getColorScheme() === 'dark' ? 'light-content' : 'dark-content'}
+          backgroundColor="transparent"
+          translucent
+        />
+        <LinearGradient
+          colors={colors.bgGradient}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={{ flex: 1 }}
+        >
+          <View
+            style={{ flex: 1, backgroundColor: colors.bgSecondary + 'AA' }}
+            accessibilityRole="summary"
+            accessibilityLabel="Premium neon backdrop"
+          >
           <NavigationContainer>
             <Stack.Navigator screenOptions={{ headerShown: false, animation: 'fade_from_bottom' }}>
               <Stack.Screen name="SignIn" component={SignIn} />
@@ -56,7 +71,8 @@ export default function App() {
               <Stack.Screen name="LinkBank" component={LinkBank} />
             </Stack.Navigator>
           </NavigationContainer>
-        </View>
+          </View>
+        </LinearGradient>
       </PaperProvider>
     </SafeAreaProvider>
   );

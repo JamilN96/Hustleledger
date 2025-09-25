@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { KeyboardAvoidingView, Platform, View, Text as RNText } from 'react-native';
-import { TextInput, Text, Button } from 'react-native-paper';
+import { KeyboardAvoidingView, Platform, View, Text as RNText, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
+import { TextInput, Text, Button, Chip } from 'react-native-paper';
 import { onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 import GlassCard from '../components/GlassCard';
 import HLButton from '../components/HLButton';
-import { colors, spacing } from '../lib/theme';
+import { useColors, spacing, radii } from '../lib/theme';
 
 export default function SignIn({ navigation }) {
+  const colors = useColors();
   const [email, setEmail] = useState('');
   const [pw, setPw] = useState('');
   const [err, setErr] = useState('');
@@ -35,55 +38,105 @@ export default function SignIn({ navigation }) {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: colors.bg }}
+      style={{ flex: 1 }}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <View style={{ flex: 1, padding: spacing(2), justifyContent: 'center' }}>
-        {/* Big soft title */}
-        <RNText style={{
-          color: colors.text, fontSize: 28, fontWeight: '700', opacity: 0.9, marginBottom: spacing(2)
-        }}>
-          Welcome to HustleLedger
-        </RNText>
-
-        {/* Glassy auth card */}
-        <GlassCard>
-          <TextInput
-            label="Email"
-            value={email}
-            onChangeText={setEmail}
-            autoCapitalize="none"
-            keyboardType="email-address"
-            style={{ marginBottom: spacing(1.5) }}
-            mode="flat"
-            theme={{ colors: { onSurfaceVariant: colors.subtext } }}
-          />
-
-          <TextInput
-            label="Password"
-            value={pw}
-            onChangeText={setPw}
-            secureTextEntry
-            textContentType="oneTimeCode"
-            style={{ marginBottom: spacing(2) }}
-            mode="flat"
-            theme={{ colors: { onSurfaceVariant: colors.subtext } }}
-          />
-
-          {!!err && <Text style={{ color: '#FF6B88', marginBottom: spacing(1) }}>{err}</Text>}
-
-          <HLButton title={loading ? 'Signing in…' : 'Sign In'} onPress={onSignIn} />
-        </GlassCard>
-
-        {/* Subtle link */}
-        <Button
-          onPress={() => navigation.replace('SignUp')}
-          textColor={colors.accent1}
-          style={{ marginTop: spacing(2) }}
+      <SafeAreaView style={{ flex: 1 }}>
+        <ScrollView
+          contentContainerStyle={{ padding: spacing(2), paddingBottom: spacing(4), flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
         >
-          Create an account
-        </Button>
-      </View>
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <View style={{ marginBottom: spacing(3) }}>
+              <Chip
+                mode="outlined"
+                style={{
+                  alignSelf: 'flex-start',
+                  backgroundColor: 'rgba(100, 231, 254, 0.12)',
+                  borderColor: colors.accent2,
+                  borderRadius: radii.lg,
+                }}
+                textStyle={{ color: colors.accent2, fontWeight: '600' }}
+              >
+                AI Wealth Concierge
+              </Chip>
+              <RNText
+                style={{
+                  color: colors.text,
+                  fontSize: 32,
+                  fontWeight: '800',
+                  marginTop: spacing(2),
+                  lineHeight: 38,
+                }}
+              >
+                Welcome back, creator.
+              </RNText>
+              <Text style={{ color: colors.subtext, marginTop: spacing(1.25), lineHeight: 20 }}>
+                Sign in to orchestrate cash flow, automate savings, and keep every hustle aligned with your goals.
+              </Text>
+            </View>
+
+            <GlassCard accessibilityLabel="Sign in to HustleLedger">
+              <LinearGradient
+                colors={[colors.cardBorder, 'transparent']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={{
+                  borderRadius: radii.lg,
+                  padding: spacing(1.5),
+                  marginBottom: spacing(2),
+                  backgroundColor: 'rgba(255,255,255,0.04)',
+                }}
+              >
+                <Text style={{ color: colors.subtext, fontSize: 13, lineHeight: 18 }}>
+                  HustleLedger syncs your accounts in real time with our AI engine. Banking-grade encryption keeps your data safe.
+                </Text>
+              </LinearGradient>
+
+              <TextInput
+                label="Email"
+                value={email}
+                onChangeText={setEmail}
+                autoCapitalize="none"
+                keyboardType="email-address"
+                style={{ marginBottom: spacing(1.5), backgroundColor: 'transparent' }}
+                mode="flat"
+                theme={{ colors: { onSurfaceVariant: colors.subtext, primary: colors.accent1 } }}
+                accessibilityLabel="Email address"
+              />
+
+              <TextInput
+                label="Password"
+                value={pw}
+                onChangeText={setPw}
+                secureTextEntry
+                textContentType="oneTimeCode"
+                style={{ marginBottom: spacing(2), backgroundColor: 'transparent' }}
+                mode="flat"
+                theme={{ colors: { onSurfaceVariant: colors.subtext, primary: colors.accent1 } }}
+                accessibilityLabel="Password"
+              />
+
+              {!!err && <Text style={{ color: colors.danger, marginBottom: spacing(1) }}>{err}</Text>}
+
+              <HLButton
+                title={loading ? 'Signing in…' : 'Enter command center'}
+                onPress={onSignIn}
+                accessibilityLabel="Sign in to HustleLedger"
+              />
+            </GlassCard>
+
+            <Button
+              onPress={() => navigation.replace('SignUp')}
+              textColor={colors.accent1}
+              style={{ marginTop: spacing(2) }}
+              accessibilityLabel="Create a new account"
+            >
+              Create an account
+            </Button>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
     </KeyboardAvoidingView>
   );
 }

@@ -1,9 +1,10 @@
 import React, { useMemo } from 'react';
 import { View } from 'react-native';
 import Svg, { Circle, Defs, LinearGradient, Stop } from 'react-native-svg';
-import { colors } from '../lib/theme';
+import { useColors } from '../lib/theme';
 
 export default function ProgressRing({ size = 180, stroke = 14, progress = 0.65 }) {
+  const colors = useColors();
   const r = (size - stroke) / 2;
   const cx = size / 2;
   const cy = size / 2;

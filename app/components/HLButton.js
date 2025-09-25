@@ -5,7 +5,13 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { useSharedValue, useAnimatedStyle, withRepeat, withTiming, Easing } from 'react-native-reanimated';
 import { useColors, radii, spacing } from '../lib/theme';
 
-export default function HLButton({ title, onPress, style, disabled }) {
+export default function HLButton({
+  title,
+  onPress,
+  style,
+  disabled,
+  accessibilityLabel,
+}) {
   const colors = useColors();
   const glow = useSharedValue(0.6);
 
@@ -18,6 +24,7 @@ export default function HLButton({ title, onPress, style, disabled }) {
   }));
 
   const handlePress = async () => {
+    if (disabled) return;
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onPress && onPress();
   };
@@ -28,7 +35,14 @@ export default function HLButton({ title, onPress, style, disabled }) {
       shadowRadius: 18,
       shadowOffset: { width: 0, height: 8 },
     }, aStyle, style]}>
-      <Pressable onPress={handlePress} disabled={disabled} style={({ pressed }) => ({ opacity: pressed ? 0.9 : 1 })}>
+      <Pressable
+        onPress={handlePress}
+        disabled={disabled}
+        accessibilityRole="button"
+        accessibilityLabel={accessibilityLabel || title}
+        accessibilityState={{ disabled: !!disabled }}
+        style={({ pressed }) => ({ opacity: pressed || disabled ? 0.85 : 1 })}
+      >
         <LinearGradient
           colors={[colors.accent1, colors.accent2]}
           start={{ x: 0, y: 0.5 }}
@@ -38,9 +52,18 @@ export default function HLButton({ title, onPress, style, disabled }) {
             paddingVertical: spacing(1.75),
             alignItems: 'center',
             justifyContent: 'center',
+            borderWidth: 1,
+            borderColor: 'rgba(255,255,255,0.14)',
+            opacity: disabled ? 0.7 : 1,
           }}
         >
-          <Text style={{ color: '#0B0B0F', fontWeight: '700', fontSize: 16 }}>{title}</Text>
+          <Text
+            style={{ color: '#050510', fontWeight: '700', fontSize: 16 }}
+            accessibilityRole="text"
+            allowFontScaling
+          >
+            {title}
+          </Text>
         </LinearGradient>
       </Pressable>
     </Animated.View>
