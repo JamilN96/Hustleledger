@@ -1,5 +1,5 @@
 // app/components/AnimatedNumber.js
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Text } from 'react-native';
 import Animated, { useSharedValue, withTiming, useAnimatedProps } from 'react-native-reanimated';
 

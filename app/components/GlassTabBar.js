@@ -1,4 +1,3 @@
-import React from 'react';
 import { View, Pressable, Text } from 'react-native';
 import { BlurView } from 'expo-blur';
 import Ionicons from 'react-native-vector-icons/Ionicons';

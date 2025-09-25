@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { View } from 'react-native';
 import { Text, TextInput, Button } from 'react-native-paper';
 import { sendPasswordResetEmail } from 'firebase/auth';
@@ -15,8 +15,8 @@ export default function ForgotPassword({ navigation }) {
     try {
       await sendPasswordResetEmail(auth, email.trim());
       setMsg('Password reset email sent. Check your inbox.');
-    } catch (e) {
-      setErr(e.message || 'Could not send reset email');
+    } catch (error) {
+      setErr(error?.message || 'Could not send reset email');
     } finally {
       setLoading(false);
     }

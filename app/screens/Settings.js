@@ -1,5 +1,5 @@
 // app/screens/Settings.js
-import React from 'react';
+import { useCallback } from 'react';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Text, Chip } from 'react-native-paper';
@@ -11,14 +11,16 @@ import { useColors, spacing, radii } from '../lib/theme';
 
 export default function Settings({ navigation }) {
   const colors = useColors();
-  const onSignOut = async () => {
+  const onSignOut = useCallback(async () => {
     try {
       await signOut(auth);
       navigation.replace('SignIn');
-    } catch (e) {
-      console.log('Sign out error:', e);
+    } catch (error) {
+      if (__DEV__) {
+        console.warn('Sign out error', error);
+      }
     }
-  };
+  }, [navigation]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

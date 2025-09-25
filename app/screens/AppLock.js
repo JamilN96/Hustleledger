@@ -1,5 +1,13 @@
+<<<<<<< HEAD
 import React from 'react';
 import { View, Text, AppState } from 'react-native';
+=======
+// app/screens/AppLock.js
+import { useEffect, useState } from 'react';
+import { View, Alert, Platform } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
+>>>>>>> 53fbc4eaf50aa56101b353f9eb128c405a27dff9
 import * as LocalAuthentication from 'expo-local-authentication';
 import { useIsFocused } from '@react-navigation/native';
 import HLButton from '../components/HLButton';
@@ -9,6 +17,7 @@ export default function AppLock({ navigation }) {
   const colors = useColors();
   const isFocused = useIsFocused();
 
+<<<<<<< HEAD
   // guards
   const promptingRef = React.useRef(false);
   const mountedRef = React.useRef(true);
@@ -16,6 +25,23 @@ export default function AppLock({ navigation }) {
   React.useEffect(() => {
     mountedRef.current = true;
     return () => { mountedRef.current = false; };
+=======
+  useEffect(() => {
+    (async () => {
+      try {
+        const hasHardware = await LocalAuthentication.hasHardwareAsync();
+        const isEnrolled = await LocalAuthentication.isEnrolledAsync();
+        setAvailable(hasHardware);
+        setEnrolled(isEnrolled);
+      } catch (error) {
+        if (__DEV__) {
+          console.warn('Biometric availability check failed', error);
+        }
+      } finally {
+        setChecking(false);
+      }
+    })();
+>>>>>>> 53fbc4eaf50aa56101b353f9eb128c405a27dff9
   }, []);
 
   // OPTIONAL: if you were prompting automatically on focus, keep it,
@@ -75,11 +101,19 @@ export default function AppLock({ navigation }) {
         // user cancel / system cancel / lockout. Stay on AppLock.
         // console.log('Auth failed:', result);
       }
+<<<<<<< HEAD
     } catch (e) {
       // Prevent crash by swallowing any unexpected throws
       console.log('Auth exception:', e?.message);
     } finally {
       promptingRef.current = false;
+=======
+    } catch (error) {
+      if (__DEV__) {
+        console.warn('Biometric authentication failed to start', error);
+      }
+      Alert.alert('Error', 'Could not start authentication.');
+>>>>>>> 53fbc4eaf50aa56101b353f9eb128c405a27dff9
     }
   }
 
