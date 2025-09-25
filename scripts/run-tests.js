@@ -1,3 +1,4 @@
+const process = require('node:process');
 const { runCLI } = require('@jest/core');
 
 (async () => {

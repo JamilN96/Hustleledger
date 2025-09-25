@@ -14,7 +14,7 @@ const compat = new FlatCompat({
 
 export default [
   {
-    ignores: ['node_modules/**', 'android/**']
+    ignores: ['node_modules/**', 'android/**', 'vendor/**']
   },
   ...compat.config({
     extends: ['eslint:recommended']

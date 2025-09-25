@@ -7,4 +7,11 @@ export const Appearance = {
   }
 };
 
-export default { Appearance };
+export const Platform = {
+  OS: 'ios',
+  select(options = {}) {
+    return options.ios ?? options.default;
+  }
+};
+
+export default { Appearance, Platform };

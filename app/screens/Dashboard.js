@@ -1,4 +1,5 @@
-import { View, ScrollView } from 'react-native';
+import React from 'react';
+import { View, ScrollView, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Text, Chip } from 'react-native-paper';
@@ -9,9 +10,36 @@ import Row from '../components/Row';
 import AIChat from '../components/AIChat';
 import AnimatedNumber from '../components/AnimatedNumber';  // 👈 add this
 import { useColors, spacing, radii } from '../lib/theme';
+import { useTransactions } from '../context/TransactionsContext';
+import { format } from 'date-fns';
 
 export default function Dashboard({ navigation }) {
   const colors = useColors();
+  const {
+    transactions,
+    processRecurringTransactions,
+    isReady,
+  } = useTransactions();
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const rootNavigation = navigation.getParent?.() ?? navigation;
+
+  const handleAddTransaction = React.useCallback(() => {
+    rootNavigation.navigate('AddTransaction');
+  }, [rootNavigation]);
+
+  const handleOpenTransaction = React.useCallback(
+    (id) => {
+      rootNavigation.navigate('TransactionDetail', { transactionId: id });
+    },
+    [rootNavigation],
+  );
+
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    await processRecurringTransactions('manual');
+    setRefreshing(false);
+  }, [processRecurringTransactions]);
 
   // Example values (we'll replace with real data later)
   const savingsGoal = 800;
@@ -19,11 +47,20 @@ export default function Dashboard({ navigation }) {
   const progress = saved / savingsGoal;
   const balance = 1650; // 👈 this will animate
 
+  const recentTransactions = React.useMemo(() => transactions.slice(0, 5), [transactions]);
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView
         contentContainerStyle={{ padding: spacing(2), paddingBottom: spacing(6) }}
         showsVerticalScrollIndicator={false}
+        refreshControl={(
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={colors.text}
+          />
+        )}
       >
         <View style={{ marginBottom: spacing(3) }}>
           <Chip
@@ -70,10 +107,10 @@ export default function Dashboard({ navigation }) {
                 Projected runway: 34 days · Next autopilot transfer hits tomorrow morning.
               </Text>
               <HLButton
-                title="Link another bank"
+                title="Add transaction"
                 style={{ marginTop: spacing(2) }}
-                onPress={() => navigation.navigate('LinkBank')}
-                accessibilityLabel="Link a bank account"
+                onPress={handleAddTransaction}
+                accessibilityLabel="Add a new transaction"
               />
             </View>
           </LinearGradient>
@@ -112,9 +149,32 @@ export default function Dashboard({ navigation }) {
 
         <GlassCard style={{ marginBottom: spacing(2) }} accessibilityLabel="Recent activity">
           <Text style={{ color: colors.text, fontWeight: '700', marginBottom: spacing(1) }}>Recent activity</Text>
-          <Row title="Uber Eats" subtitle="Dining" amount="24.90" negative />
-          <Row title="Deposit: DoorDash" subtitle="Side Hustle" amount="118.00" />
-          <Row title="Shell Gas" subtitle="Auto" amount="42.30" negative />
+          {isReady && recentTransactions.length === 0 && (
+            <Text style={{ color: colors.subtext, paddingVertical: spacing(1) }}>
+              No transactions yet. Tap "Add transaction" to get started.
+            </Text>
+          )}
+          {recentTransactions.map((transaction) => {
+            const dateLabel = transaction.date
+              ? format(new Date(transaction.date), 'MMM d')
+              : 'No date';
+            const subtitle = transaction.category
+              ? `${transaction.category} • ${dateLabel}`
+              : dateLabel;
+            const negative = transaction.amount < 0;
+            return (
+              <Row
+                key={transaction.id}
+                title={transaction.title}
+                subtitle={subtitle}
+                amount={Math.abs(transaction.amount)}
+                negative={negative}
+                icon={transaction.isRecurring ? '🔁' : undefined}
+                onPress={() => handleOpenTransaction(transaction.id)}
+                accessibilityLabel={`View ${transaction.title} details`}
+              />
+            );
+          })}
         </GlassCard>
 
         <AIChat />

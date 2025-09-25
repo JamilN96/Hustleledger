@@ -11,6 +11,7 @@ export default function HLButton({
   style,
   disabled,
   accessibilityLabel,
+  variant = 'primary',
 }) {
   const colors = useColors();
   const glow = useSharedValue(0.6);
@@ -29,6 +30,11 @@ export default function HLButton({
     onPress && onPress();
   };
 
+  const gradientColors =
+    variant === 'danger'
+      ? ['#FF5F6D', '#FFC371']
+      : [colors.accent1, colors.accent2];
+
   return (
     <Animated.View style={[{
       shadowColor: colors.accent2,
@@ -44,7 +50,7 @@ export default function HLButton({
         style={({ pressed }) => ({ opacity: pressed || disabled ? 0.85 : 1 })}
       >
         <LinearGradient
-          colors={[colors.accent1, colors.accent2]}
+          colors={gradientColors}
           start={{ x: 0, y: 0.5 }}
           end={{ x: 1, y: 0.5 }}
           style={{
