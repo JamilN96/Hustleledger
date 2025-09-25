@@ -35,7 +35,12 @@ export default [
         console: 'readonly',
         fetch: 'readonly',
         requestAnimationFrame: 'readonly',
-        require: 'readonly'
+        require: 'readonly',
+        module: 'readonly',
+        process: 'readonly',
+        global: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly'
       }
     },
     plugins: {
@@ -90,6 +95,19 @@ export default [
         process: 'readonly',
         require: 'readonly',
         __dirname: 'readonly'
+      }
+    }
+  },
+  {
+    files: ['__tests__/**/*.js'],
+    languageOptions: {
+      sourceType: 'module',
+      globals: {
+        describe: 'readonly',
+        it: 'readonly',
+        expect: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly'
       }
     }
   }

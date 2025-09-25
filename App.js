@@ -12,16 +12,7 @@ import {
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-
-<<<<<<< HEAD
-=======
-try {
-  require('./app/config.local');
-} catch {
-  // Optional local overrides for development only
-}
-
->>>>>>> 53fbc4eaf50aa56101b353f9eb128c405a27dff9
+import { TransactionsProvider } from './app/lib/transactions';
 import { useColors, radii } from './app/lib/theme';
 
 import SignIn from './app/screens/SignIn';
@@ -30,10 +21,11 @@ import AppLock from './app/screens/AppLock';
 import RootTabs from './app/navigation/RootTabs';
 import LinkBank from './app/screens/LinkBank';
 
-// Optional local config (silently ignored if missing)
 try {
   require('./app/config.local');
-} catch {}
+} catch {
+  // Optional local overrides may not exist in all environments.
+}
 
 const Stack = createNativeStackNavigator();
 
@@ -82,21 +74,17 @@ export default function App() {
             accessibilityRole="summary"
             accessibilityLabel="Premium neon backdrop"
           >
-            <NavigationContainer>
-<<<<<<< HEAD
-              <Stack.Navigator
-                screenOptions={{ headerShown: false, animation: 'fade_from_bottom' }}
-              >
-=======
-              <Stack.Navigator screenOptions={{ headerShown: false, animation: 'fade_from_bottom' }}>
->>>>>>> 53fbc4eaf50aa56101b353f9eb128c405a27dff9
-                <Stack.Screen name="SignIn" component={SignIn} />
-                <Stack.Screen name="SignUp" component={SignUp} />
-                <Stack.Screen name="AppLock" component={AppLock} />
-                <Stack.Screen name="RootTabs" component={RootTabs} />
-                <Stack.Screen name="LinkBank" component={LinkBank} />
-              </Stack.Navigator>
-            </NavigationContainer>
+            <TransactionsProvider>
+              <NavigationContainer>
+                <Stack.Navigator screenOptions={{ headerShown: false, animation: 'fade_from_bottom' }}>
+                  <Stack.Screen name="SignIn" component={SignIn} />
+                  <Stack.Screen name="SignUp" component={SignUp} />
+                  <Stack.Screen name="AppLock" component={AppLock} />
+                  <Stack.Screen name="RootTabs" component={RootTabs} />
+                  <Stack.Screen name="LinkBank" component={LinkBank} />
+                </Stack.Navigator>
+              </NavigationContainer>
+            </TransactionsProvider>
           </View>
         </LinearGradient>
       </PaperProvider>
