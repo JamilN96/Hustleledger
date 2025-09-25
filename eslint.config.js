@@ -1,24 +1,12 @@
 import { createRequire } from 'node:module';
-import { FlatCompat } from '@eslint/eslintrc';
-
 const require = createRequire(import.meta.url);
 const recommendedConfig = require('./config/eslint/eslint-recommended.cjs');
-import reactPlugin from 'eslint-plugin-react';
-import reactHooksPlugin from 'eslint-plugin-react-hooks';
-import reactNativePlugin from 'eslint-plugin-react-native';
-
-const compat = new FlatCompat({
-  baseDirectory: import.meta.dirname,
-  recommendedConfig
-});
+const baseRecommendedRules = recommendedConfig?.rules ?? {};
 
 export default [
   {
-    ignores: ['node_modules/**', 'android/**']
+    ignores: ['node_modules/**', 'android/**', 'vendor/**', '**/.eslintrc.js']
   },
-  ...compat.config({
-    extends: ['eslint:recommended']
-  }),
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
     languageOptions: {
@@ -34,29 +22,22 @@ export default [
         JSX: 'readonly',
         console: 'readonly',
         fetch: 'readonly',
+        globalThis: 'readonly',
         requestAnimationFrame: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
         require: 'readonly'
       }
     },
-    plugins: {
-      react: reactPlugin,
-      'react-hooks': reactHooksPlugin,
-      'react-native': reactNativePlugin
-    },
-    settings: {
-      react: {
-        version: 'detect'
-      }
-    },
     rules: {
-      'react/react-in-jsx-scope': 'off',
-      'react/jsx-uses-react': 'off',
-      'react/jsx-uses-vars': 'error',
-      'react/prop-types': 'off',
-      'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn',
-      'react-native/no-unused-styles': 'error',
-      'react-native/no-inline-styles': 'off'
+      ...baseRecommendedRules,
+      'no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^(?:_|[A-Z])',
+        },
+      ]
     }
   },
   {
@@ -82,6 +63,19 @@ export default [
   },
   {
     files: ['testing/**/*.cjs'],
+    languageOptions: {
+      sourceType: 'script',
+      globals: {
+        console: 'readonly',
+        module: 'readonly',
+        process: 'readonly',
+        require: 'readonly',
+        __dirname: 'readonly'
+      }
+    }
+  },
+  {
+    files: ['scripts/**/*.js'],
     languageOptions: {
       sourceType: 'script',
       globals: {

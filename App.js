@@ -1,4 +1,3 @@
-// App.js
 import 'react-native-gesture-handler';
 import 'react-native-reanimated';
 
@@ -13,15 +12,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-<<<<<<< HEAD
-=======
 try {
   require('./app/config.local');
 } catch {
   // Optional local overrides for development only
 }
 
->>>>>>> 53fbc4eaf50aa56101b353f9eb128c405a27dff9
 import { useColors, radii } from './app/lib/theme';
 
 import SignIn from './app/screens/SignIn';
@@ -30,41 +26,38 @@ import AppLock from './app/screens/AppLock';
 import RootTabs from './app/navigation/RootTabs';
 import LinkBank from './app/screens/LinkBank';
 
-// Optional local config (silently ignored if missing)
-try {
-  require('./app/config.local');
-} catch {}
-
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   const colors = useColors();
+  const gradient = colors.bgGradient ?? [colors.bg, colors.bgSecondary];
+  const scrim = `${colors.bgSecondary}AA`;
 
-  // fallbacks so this file works with the simple theme as well
-  const gradient = colors.bgGradient ?? [colors.background, colors.card];
-  const bgSecondary = colors.bgSecondary ?? colors.background;
-
-  const theme = {
-    ...DefaultTheme,
-    roundness: radii.md,
-    colors: {
-      ...DefaultTheme.colors,
-      primary: colors.primary,    // accent color from theme
-      onSurface: colors.text,
-      surface: 'transparent',
-      background: colors.background,
-    },
-  };
+  const theme = React.useMemo(
+    () => ({
+      ...DefaultTheme,
+      roundness: radii.md,
+      colors: {
+        ...DefaultTheme.colors,
+        primary: colors.primary,
+        onSurface: colors.text,
+        surface: colors.card,
+        secondary: colors.accent2,
+        background: colors.background,
+        outline: colors.cardOutline,
+      },
+    }),
+    [colors]
+  );
 
   React.useEffect(() => {
     const sub = Appearance.addChangeListener(() => {
-      // noop; forces re-render when system theme changes
+      // trigger re-render so gradient + theme respond to system flips
     });
     return () => sub.remove();
   }, []);
 
-  const barStyle =
-    Appearance.getColorScheme() === 'dark' ? 'light-content' : 'dark-content';
+  const barStyle = colors.isDark ? 'light-content' : 'dark-content';
 
   return (
     <SafeAreaProvider>
@@ -78,18 +71,14 @@ export default function App() {
           style={{ flex: 1 }}
         >
           <View
-            style={{ flex: 1, backgroundColor: `${bgSecondary}AA` }}
+            style={{ flex: 1, backgroundColor: scrim }}
             accessibilityRole="summary"
             accessibilityLabel="Premium neon backdrop"
           >
             <NavigationContainer>
-<<<<<<< HEAD
               <Stack.Navigator
                 screenOptions={{ headerShown: false, animation: 'fade_from_bottom' }}
               >
-=======
-              <Stack.Navigator screenOptions={{ headerShown: false, animation: 'fade_from_bottom' }}>
->>>>>>> 53fbc4eaf50aa56101b353f9eb128c405a27dff9
                 <Stack.Screen name="SignIn" component={SignIn} />
                 <Stack.Screen name="SignUp" component={SignUp} />
                 <Stack.Screen name="AppLock" component={AppLock} />
