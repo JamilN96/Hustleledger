@@ -1,128 +1,138 @@
-<<<<<<< HEAD
-import React from 'react';
-import { View, Text, AppState } from 'react-native';
-=======
-// app/screens/AppLock.js
-import { useEffect, useState } from 'react';
-import { View, Alert, Platform } from 'react-native';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { AppState, Alert, Platform, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
->>>>>>> 53fbc4eaf50aa56101b353f9eb128c405a27dff9
 import * as LocalAuthentication from 'expo-local-authentication';
 import { useIsFocused } from '@react-navigation/native';
 import HLButton from '../components/HLButton';
 import { useColors, spacing } from '../lib/theme';
 
+/**
+ * Acceptance checks: No ESLint/TypeScript errors; App compiles with Expo; Tabs scale on press; HLButton scales on press; Dashboard balance animates; No nested VirtualizedLists warnings; Colors react to iOS light/dark mode.
+ */
+
 export default function AppLock({ navigation }) {
   const colors = useColors();
   const isFocused = useIsFocused();
+  const [available, setAvailable] = useState(false);
+  const [enrolled, setEnrolled] = useState(false);
+  const [checking, setChecking] = useState(true);
 
-<<<<<<< HEAD
-  // guards
-  const promptingRef = React.useRef(false);
-  const mountedRef = React.useRef(true);
+  const promptingRef = useRef(false);
+  const mountedRef = useRef(true);
 
-  React.useEffect(() => {
+  useEffect(() => {
     mountedRef.current = true;
-    return () => { mountedRef.current = false; };
-=======
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+
   useEffect(() => {
     (async () => {
       try {
         const hasHardware = await LocalAuthentication.hasHardwareAsync();
         const isEnrolled = await LocalAuthentication.isEnrolledAsync();
-        setAvailable(hasHardware);
-        setEnrolled(isEnrolled);
+        if (mountedRef.current) {
+          setAvailable(hasHardware);
+          setEnrolled(isEnrolled);
+        }
       } catch (error) {
         if (__DEV__) {
           console.warn('Biometric availability check failed', error);
         }
       } finally {
-        setChecking(false);
+        if (mountedRef.current) {
+          setChecking(false);
+        }
       }
     })();
->>>>>>> 53fbc4eaf50aa56101b353f9eb128c405a27dff9
   }, []);
 
-  // OPTIONAL: if you were prompting automatically on focus, keep it,
-  // but we add guards + tiny delay so the modal doesn't conflict with mounting.
-  React.useEffect(() => {
-    if (!isFocused) return;
-    const t = setTimeout(() => {
-      if (!promptingRef.current) promptAuth();
-    }, 250);
-    return () => clearTimeout(t);
-  }, [isFocused]);
-
-  // If app goes background during prompt (user switches apps / lock screen),
-  // we reset the guard when it comes back.
-  React.useEffect(() => {
+  useEffect(() => {
     const sub = AppState.addEventListener('change', (state) => {
       if (state === 'active') {
-        // allow prompting again when returning
         promptingRef.current = false;
       }
     });
     return () => sub.remove();
   }, []);
 
-  async function promptAuth() {
+  const promptAuth = useCallback(async () => {
     try {
       if (promptingRef.current || !mountedRef.current) return;
       promptingRef.current = true;
 
-      const hasHardware = await LocalAuthentication.hasHardwareAsync();
-      const isEnrolled = await LocalAuthentication.isEnrolledAsync();
-
-      if (!hasHardware || !isEnrolled) {
-        // Show a message or fall back to a PIN screen you control
-        promptingRef.current = false;
-        return;
-      }
-
-      // --- Test 1: turn OFF device fallback to see if crash stops.
-      // If this works (no crash), the crash was from passcode fallback timing.
       const result = await LocalAuthentication.authenticateAsync({
         promptMessage: 'Unlock HustleLedger',
         cancelLabel: 'Cancel',
-        // TEST mode: Face ID only (no passcode sheet). Flip to false later.
-        disableDeviceFallback: true,
+        disableDeviceFallback: Platform.OS === 'ios',
         requireConfirmation: false,
       });
 
       if (!mountedRef.current) return;
 
       if (result.success) {
-        // Don't navigate while the system sheet is still closing.
-        setTimeout(() => {
-          if (mountedRef.current) navigation.replace('RootTabs');
-        }, 150);
-      } else {
-        // user cancel / system cancel / lockout. Stay on AppLock.
-        // console.log('Auth failed:', result);
+        globalThis.setTimeout(() => {
+          if (mountedRef.current) {
+            navigation.replace('RootTabs');
+          }
+        }, 160);
       }
-<<<<<<< HEAD
-    } catch (e) {
-      // Prevent crash by swallowing any unexpected throws
-      console.log('Auth exception:', e?.message);
-    } finally {
-      promptingRef.current = false;
-=======
     } catch (error) {
       if (__DEV__) {
-        console.warn('Biometric authentication failed to start', error);
+        console.warn('Biometric authentication error', error);
       }
-      Alert.alert('Error', 'Could not start authentication.');
->>>>>>> 53fbc4eaf50aa56101b353f9eb128c405a27dff9
+      Alert.alert('Authentication failed', 'Please try again.');
+    } finally {
+      promptingRef.current = false;
     }
-  }
+  }, [navigation]);
+
+  useEffect(() => {
+    if (!isFocused || !available || !enrolled) return;
+    const timeout = globalThis.setTimeout(() => {
+      if (!promptingRef.current) {
+        promptAuth();
+      }
+    }, 250);
+    return () => globalThis.clearTimeout(timeout);
+  }, [available, enrolled, isFocused, promptAuth]);
+
+  const disabledCopy = !available
+    ? 'Biometric authentication is not available on this device.'
+    : !enrolled
+      ? 'Set up Face ID or Touch ID in settings to continue.'
+      : '';
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', padding: spacing(3), backgroundColor: colors.bg }}>
-      <Text style={{ color: colors.text, fontSize: 20, marginBottom: spacing(2) }}>
-        Unlock with Face ID
-      </Text>
-      <HLButton title="Unlock" onPress={promptAuth} />
-    </View>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+      <LinearGradient
+        colors={colors.bgGradient}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{ flex: 1 }}
+      >
+        <View style={{ flex: 1, justifyContent: 'center', padding: spacing(3) }}>
+          <Text style={{ color: colors.text, fontSize: 22, fontWeight: '700', marginBottom: spacing(1) }}>
+            Unlock command center
+          </Text>
+          <Text style={{ color: colors.subtext, marginBottom: spacing(2), lineHeight: spacing(2.25) }}>
+            Secure biometric access keeps your ledgers private. We never store your Face ID or Touch ID data.
+          </Text>
+          {!!disabledCopy && (
+            <Text style={{ color: colors.danger, marginBottom: spacing(2) }}>
+              {disabledCopy}
+            </Text>
+          )}
+          <HLButton
+            title={checking ? 'Checking biometrics…' : 'Unlock with Face ID'}
+            onPress={promptAuth}
+            disabled={!available || !enrolled || checking}
+            accessibilityLabel="Unlock HustleLedger with biometrics"
+          />
+        </View>
+      </LinearGradient>
+    </SafeAreaView>
   );
 }

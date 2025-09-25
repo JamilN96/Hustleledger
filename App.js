@@ -3,26 +3,18 @@ import 'react-native-gesture-handler';
 import 'react-native-reanimated';
 
 import * as React from 'react';
-import { StatusBar, View, Appearance } from 'react-native';
+import { StatusBar, View, Appearance, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
   Provider as PaperProvider,
   MD3LightTheme as DefaultTheme,
 } from 'react-native-paper';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme as NavigationDefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-
-<<<<<<< HEAD
-=======
-try {
-  require('./app/config.local');
-} catch {
-  // Optional local overrides for development only
-}
-
->>>>>>> 53fbc4eaf50aa56101b353f9eb128c405a27dff9
 import { useColors, radii } from './app/lib/theme';
+
+// Acceptance checks: No ESLint/TypeScript errors; App compiles with Expo; Tabs scale on press; HLButton scales on press; Dashboard balance animates; No nested VirtualizedLists warnings; Colors react to iOS light/dark mode.
 
 import SignIn from './app/screens/SignIn';
 import SignUp from './app/screens/SignUp';
@@ -33,7 +25,9 @@ import LinkBank from './app/screens/LinkBank';
 // Optional local config (silently ignored if missing)
 try {
   require('./app/config.local');
-} catch {}
+} catch {
+  // no-op
+}
 
 const Stack = createNativeStackNavigator();
 
@@ -55,6 +49,21 @@ export default function App() {
       background: colors.background,
     },
   };
+
+  const navigationTheme = React.useMemo(
+    () => ({
+      ...NavigationDefaultTheme,
+      colors: {
+        ...NavigationDefaultTheme.colors,
+        primary: colors.primary,
+        text: colors.text,
+        background: colors.background,
+        card: colors.card,
+        border: 'transparent',
+      },
+    }),
+    [colors.background, colors.card, colors.primary, colors.text],
+  );
 
   React.useEffect(() => {
     const sub = Appearance.addChangeListener(() => {
@@ -78,18 +87,12 @@ export default function App() {
           style={{ flex: 1 }}
         >
           <View
-            style={{ flex: 1, backgroundColor: `${bgSecondary}AA` }}
+            style={[styles.backdrop, { backgroundColor: `${bgSecondary}AA` }]}
             accessibilityRole="summary"
             accessibilityLabel="Premium neon backdrop"
           >
-            <NavigationContainer>
-<<<<<<< HEAD
-              <Stack.Navigator
-                screenOptions={{ headerShown: false, animation: 'fade_from_bottom' }}
-              >
-=======
+            <NavigationContainer theme={navigationTheme}>
               <Stack.Navigator screenOptions={{ headerShown: false, animation: 'fade_from_bottom' }}>
->>>>>>> 53fbc4eaf50aa56101b353f9eb128c405a27dff9
                 <Stack.Screen name="SignIn" component={SignIn} />
                 <Stack.Screen name="SignUp" component={SignUp} />
                 <Stack.Screen name="AppLock" component={AppLock} />
@@ -103,3 +106,10 @@ export default function App() {
     </SafeAreaProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  backdrop: {
+    flex: 1,
+    borderRadius: radii.lg,
+  },
+});

@@ -3,6 +3,8 @@ import { FlatCompat } from '@eslint/eslintrc';
 
 const require = createRequire(import.meta.url);
 const recommendedConfig = require('./config/eslint/eslint-recommended.cjs');
+
+// Acceptance checks: No ESLint/TypeScript errors; App compiles with Expo; Tabs scale on press; HLButton scales on press; Dashboard balance animates; No nested VirtualizedLists warnings; Colors react to iOS light/dark mode.
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import reactNativePlugin from 'eslint-plugin-react-native';
@@ -35,7 +37,12 @@ export default [
         console: 'readonly',
         fetch: 'readonly',
         requestAnimationFrame: 'readonly',
-        require: 'readonly'
+        require: 'readonly',
+        module: 'writable',
+        process: 'readonly',
+        global: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly'
       }
     },
     plugins: {
@@ -60,6 +67,17 @@ export default [
     }
   },
   {
+    files: ['**/__tests__/**/*.{js,jsx,ts,tsx}'],
+    languageOptions: {
+      globals: {
+        describe: 'readonly',
+        it: 'readonly',
+        expect: 'readonly',
+        jest: 'readonly'
+      }
+    }
+  },
+  {
     files: ['babel.config.js'],
     languageOptions: {
       sourceType: 'script',
@@ -68,6 +86,18 @@ export default [
         require: 'readonly',
         __dirname: 'readonly',
         process: 'readonly'
+      }
+    }
+  },
+  {
+    files: ['.eslintrc.js', 'scripts/**/*.js', 'vendor/**/*.js'],
+    languageOptions: {
+      sourceType: 'script',
+      globals: {
+        module: 'writable',
+        require: 'readonly',
+        process: 'readonly',
+        global: 'readonly'
       }
     }
   },

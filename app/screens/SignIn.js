@@ -9,6 +9,8 @@ import GlassCard from '../components/GlassCard';
 import HLButton from '../components/HLButton';
 import { useColors, spacing, radii } from '../lib/theme';
 
+// Acceptance checks: No ESLint/TypeScript errors; App compiles with Expo; Tabs scale on press; HLButton scales on press; Dashboard balance animates; No nested VirtualizedLists warnings; Colors react to iOS light/dark mode.
+
 export default function SignIn({ navigation }) {
   const colors = useColors();
   const [email, setEmail] = useState('');
@@ -30,11 +32,7 @@ export default function SignIn({ navigation }) {
       await signInWithEmailAndPassword(auth, email.trim(), pw);
       navigation.replace('AppLock');
     } catch (error) {
-<<<<<<< HEAD
-      setErr(error.message || 'Sign in failed');
-=======
       setErr(error?.message || 'Sign in failed');
->>>>>>> 53fbc4eaf50aa56101b353f9eb128c405a27dff9
     } finally {
       setLoading(false);
     }

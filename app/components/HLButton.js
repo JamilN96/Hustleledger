@@ -1,67 +1,68 @@
-import { useEffect } from 'react';
-import { Pressable, Text } from 'react-native';
-import * as Haptics from 'expo-haptics';
+import { Pressable, Text, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import Animated, { useSharedValue, useAnimatedStyle, withRepeat, withTiming, Easing } from 'react-native-reanimated';
+import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
 import { useColors, radii, spacing } from '../lib/theme';
+import { tapHaptic } from '../lib/haptics';
+
+/**
+ * Acceptance checks: No ESLint/TypeScript errors; App compiles with Expo; Tabs scale on press; HLButton scales on press; Dashboard balance animates; No nested VirtualizedLists warnings; Colors react to iOS light/dark mode.
+ */
 
 export default function HLButton({
   title,
   onPress,
   style,
-  disabled,
+  disabled = false,
   accessibilityLabel,
 }) {
   const colors = useColors();
-  const glow = useSharedValue(0.6);
+  const scale = useSharedValue(1);
 
-  useEffect(() => {
-    glow.value = withRepeat(withTiming(1, { duration: 1800, easing: Easing.inOut(Easing.quad) }), -1, true);
-  }, [glow]);
-
-  const aStyle = useAnimatedStyle(() => ({
-    shadowOpacity: glow.value * 0.7,
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
   }));
+
+  const handlePressIn = () => {
+    scale.value = withSpring(0.97, {
+      damping: 16,
+      stiffness: 220,
+      mass: 0.6,
+    });
+  };
+
+  const handlePressOut = () => {
+    scale.value = withSpring(1, {
+      damping: 16,
+      stiffness: 220,
+      mass: 0.6,
+    });
+  };
 
   const handlePress = async () => {
     if (disabled) return;
-    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    onPress && onPress();
+    await tapHaptic();
+    onPress?.();
   };
 
   return (
-    <Animated.View style={[{
-      shadowColor: colors.accent2,
-      shadowRadius: 18,
-      shadowOffset: { width: 0, height: 8 },
-    }, aStyle, style]}>
+    <Animated.View style={[styles.shadow, { shadowColor: colors.primary }, animatedStyle, style]}>
       <Pressable
         onPress={handlePress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
         disabled={disabled}
         accessibilityRole="button"
         accessibilityLabel={accessibilityLabel || title}
         accessibilityState={{ disabled: !!disabled }}
-        style={({ pressed }) => ({ opacity: pressed || disabled ? 0.85 : 1 })}
+        style={({ pressed }) => [styles.pressable, pressed && styles.pressed]}
       >
         <LinearGradient
-          colors={[colors.accent1, colors.accent2]}
+          colors={['#B388FF', '#7DD3FC']}
           start={{ x: 0, y: 0.5 }}
           end={{ x: 1, y: 0.5 }}
-          style={{
-            borderRadius: radii.xl,
-            paddingVertical: spacing(1.75),
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderWidth: 1,
-            borderColor: 'rgba(255,255,255,0.14)',
-            opacity: disabled ? 0.7 : 1,
-          }}
+          style={[styles.gradient, { opacity: disabled ? 0.7 : 1 }]}
         >
-          <Text
-            style={{ color: '#050510', fontWeight: '700', fontSize: 16 }}
-            accessibilityRole="text"
-            allowFontScaling
-          >
+          <Text style={styles.label} allowFontScaling accessibilityRole="text">
             {title}
           </Text>
         </LinearGradient>
@@ -69,3 +70,32 @@ export default function HLButton({
     </Animated.View>
   );
 }
+
+const styles = StyleSheet.create({
+  shadow: {
+    shadowOpacity: 0.38,
+    shadowRadius: spacing(2.75),
+    shadowOffset: { width: 0, height: spacing(1) },
+    elevation: 8,
+  },
+  pressable: {
+    borderRadius: radii.lg,
+  },
+  pressed: {
+    opacity: 0.9,
+  },
+  gradient: {
+    borderRadius: radii.lg,
+    paddingVertical: spacing(1.75),
+    paddingHorizontal: spacing(2.5),
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.18)',
+  },
+  label: {
+    color: '#FFFFFF',
+    fontWeight: '700',
+    fontSize: 16,
+  },
+});
