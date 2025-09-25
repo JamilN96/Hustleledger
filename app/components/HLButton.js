@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { Pressable, Text } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -15,9 +15,9 @@ export default function HLButton({
   const colors = useColors();
   const glow = useSharedValue(0.6);
 
-  React.useEffect(() => {
+  useEffect(() => {
     glow.value = withRepeat(withTiming(1, { duration: 1800, easing: Easing.inOut(Easing.quad) }), -1, true);
-  }, []);
+  }, [glow]);
 
   const aStyle = useAnimatedStyle(() => ({
     shadowOpacity: glow.value * 0.7,

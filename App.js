@@ -8,7 +8,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-try { require('./app/config.local'); } catch (e) {}
+try {
+  require('./app/config.local');
+} catch {
+  // Optional local overrides for development only
+}
 
 import { useColors, radii } from './app/lib/theme';
 import SignIn from './app/screens/SignIn';
@@ -59,15 +63,15 @@ export default function App() {
             accessibilityRole="summary"
             accessibilityLabel="Premium neon backdrop"
           >
-          <NavigationContainer>
-            <Stack.Navigator screenOptions={{ headerShown: false, animation: 'fade_from_bottom' }}>
-              <Stack.Screen name="SignIn" component={SignIn} />
-              <Stack.Screen name="SignUp" component={SignUp} />
-              <Stack.Screen name="AppLock" component={AppLock} />
-              <Stack.Screen name="RootTabs" component={RootTabs} />
-              <Stack.Screen name="LinkBank" component={LinkBank} />
-            </Stack.Navigator>
-          </NavigationContainer>
+            <NavigationContainer>
+              <Stack.Navigator screenOptions={{ headerShown: false, animation: 'fade_from_bottom' }}>
+                <Stack.Screen name="SignIn" component={SignIn} />
+                <Stack.Screen name="SignUp" component={SignUp} />
+                <Stack.Screen name="AppLock" component={AppLock} />
+                <Stack.Screen name="RootTabs" component={RootTabs} />
+                <Stack.Screen name="LinkBank" component={LinkBank} />
+              </Stack.Navigator>
+            </NavigationContainer>
           </View>
         </LinearGradient>
       </PaperProvider>
