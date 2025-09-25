@@ -1,5 +1,5 @@
 // app/screens/SignUp.js
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, View, Text as RNText, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -27,8 +27,8 @@ export default function SignUp({ navigation }) {
     try {
       await createUserWithEmailAndPassword(auth, email.trim(), pw);
       navigation.replace('AppLock');
-    } catch (e) {
-      setErr(e?.message || 'Sign up failed');
+    } catch (error) {
+      setErr(error?.message || 'Sign up failed');
     } finally {
       setLoading(false);
     }

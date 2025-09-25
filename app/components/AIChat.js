@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import { useRef, useState } from 'react';
 import { View, FlatList } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Text, TextInput, ActivityIndicator, Chip } from 'react-native-paper';

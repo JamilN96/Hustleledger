@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { KeyboardAvoidingView, Platform, View, Text as RNText, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -21,7 +21,7 @@ export default function SignIn({ navigation }) {
       if (u) navigation.replace('AppLock');
     });
     return () => unsub();
-  }, []);
+  }, [navigation]);
 
   const onSignIn = async () => {
     setErr('');
@@ -29,8 +29,8 @@ export default function SignIn({ navigation }) {
     try {
       await signInWithEmailAndPassword(auth, email.trim(), pw);
       navigation.replace('AppLock');
-    } catch (e) {
-      setErr(e.message || 'Sign in failed');
+    } catch (error) {
+      setErr(error?.message || 'Sign in failed');
     } finally {
       setLoading(false);
     }

@@ -1,5 +1,5 @@
 // app/screens/AppLock.js
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Alert, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -22,8 +22,10 @@ export default function AppLock({ navigation }) {
         const isEnrolled = await LocalAuthentication.isEnrolledAsync();
         setAvailable(hasHardware);
         setEnrolled(isEnrolled);
-      } catch (e) {
-        // If anything fails, allow continue button
+      } catch (error) {
+        if (__DEV__) {
+          console.warn('Biometric availability check failed', error);
+        }
       } finally {
         setChecking(false);
       }
@@ -44,7 +46,10 @@ export default function AppLock({ navigation }) {
       } else {
         Alert.alert('Locked', 'Authentication failed.');
       }
-    } catch (e) {
+    } catch (error) {
+      if (__DEV__) {
+        console.warn('Biometric authentication failed to start', error);
+      }
       Alert.alert('Error', 'Could not start authentication.');
     }
   };
