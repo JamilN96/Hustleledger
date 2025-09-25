@@ -1,13 +1,24 @@
-import js from '@eslint/js';
+import { createRequire } from 'node:module';
+import { FlatCompat } from '@eslint/eslintrc';
+
+const require = createRequire(import.meta.url);
+const recommendedConfig = require('./config/eslint/eslint-recommended.cjs');
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import reactNativePlugin from 'eslint-plugin-react-native';
+
+const compat = new FlatCompat({
+  baseDirectory: import.meta.dirname,
+  recommendedConfig
+});
 
 export default [
   {
     ignores: ['node_modules/**', 'android/**']
   },
-  js.configs.recommended,
+  ...compat.config({
+    extends: ['eslint:recommended']
+  }),
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
     languageOptions: {
