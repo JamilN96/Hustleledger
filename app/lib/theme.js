@@ -1,44 +1,33 @@
 import { Appearance } from 'react-native';
 
-const dark = {
-  bg: '#050510',
-  bgSecondary: '#0F1432',
-  card: 'rgba(26, 28, 54, 0.72)',
-  cardBorder: 'rgba(111, 230, 255, 0.22)',
-  cardOutline: 'rgba(124, 92, 255, 0.18)',
-  text: '#F5F6FF',
-  subtext: '#A1A6C8',
-  accent1: '#A889FF',
-  accent2: '#64E7FE',
-  accent3: '#2CFFB5',
-  success: '#5CFFBD',
-  danger: '#FF7A93',
-  bgGradient: ['#050510', '#0F1432', '#050510'],
-  cardGradient: ['rgba(168, 137, 255, 0.18)', 'rgba(100, 231, 254, 0.12)'],
-};
-const light = {
-  bg: '#F6F6FF',
-  bgSecondary: '#FFFFFF',
-  card: 'rgba(255, 255, 255, 0.86)',
-  cardBorder: 'rgba(100, 231, 254, 0.28)',
-  cardOutline: 'rgba(124, 92, 255, 0.25)',
-  text: '#141326',
-  subtext: '#5B5B76',
-  accent1: '#6A4BFF',
-  accent2: '#00BEE7',
-  accent3: '#00D58F',
-  success: '#00B46F',
-  danger: '#F04D7F',
-  bgGradient: ['#ECECFF', '#F9FAFF', '#ECECFF'],
-  cardGradient: ['rgba(106, 75, 255, 0.12)', 'rgba(0, 190, 231, 0.08)'],
+export const spacing = (factor = 1) => factor * 8; // 8px grid system
+
+export const radii = {
+  sm: 6,
+  md: 12,
+  lg: 24,
 };
 
-export const radii = { xl: 28, lg: 20, md: 14 };
-export const spacing = (n = 1) => 8 * n;
+export const useIsDarkMode = () => {
+  return Appearance.getColorScheme() === 'dark';
+};
 
 export const useColors = () => {
-  const scheme = Appearance.getColorScheme() || 'dark';
-  return scheme === 'dark' ? dark : light;
-};
+  const isDark = useIsDarkMode();
 
-export const useIsDarkMode = () => (Appearance.getColorScheme() || 'dark') === 'dark';
+  return {
+    // Backgrounds
+    bg: isDark ? '#000000' : '#FFFFFF',
+    bgSecondary: isDark ? '#121212' : '#F2F2F7',
+    bgGradient: isDark
+      ? ['#0f0f0f', '#1a1a1a', '#222831']
+      : ['#ffffff', '#f4f4f4', '#eaeaea'],
+
+    // Text
+    text: isDark ? '#EAEAEA' : '#1A1A1A',
+
+    // Accent
+    accent1: '#A18CFF', // purple gradient
+    accent2: '#58D5F7', // blue gradient
+  };
+};

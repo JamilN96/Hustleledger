@@ -1,5 +1,24 @@
 {
-  "android": {
-    "package": "com.jamiln96.hustleledger"
+  "expo": {
+    "name": "HustleLedger",
+    "slug": "hustleledger",
+    "scheme": "hustleledger",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+
+    "ios": {
+      "bundleIdentifier": "com.jamiln96.hustleledger",
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "HustleLedger uses Face ID to securely unlock your account."
+      }
+    },
+
+    "android": {
+      "package": "com.jamiln96.hustleledger"
+    },
+
+    "assetBundlePatterns": ["**/*"]
   }
 }
