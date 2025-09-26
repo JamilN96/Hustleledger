@@ -30,11 +30,7 @@ export default function SignIn({ navigation }) {
       await signInWithEmailAndPassword(auth, email.trim(), pw);
       navigation.replace('AppLock');
     } catch (error) {
-<<<<<<< HEAD
-      setErr(error.message || 'Sign in failed');
-=======
       setErr(error?.message || 'Sign in failed');
->>>>>>> 53fbc4eaf50aa56101b353f9eb128c405a27dff9
     } finally {
       setLoading(false);
     }
@@ -76,7 +72,7 @@ export default function SignIn({ navigation }) {
                 Welcome back, creator.
               </RNText>
               <Text style={{ color: colors.subtext, marginTop: spacing(1.25), lineHeight: 20 }}>
-                Sign in to orchestrate cash flow, automate savings, and keep every hustle aligned with your goals.
+                Sign in to orchestrate your cash streams, auto-optimize savings, and let AI keep every hustle aligned with your mission.
               </Text>
             </View>
 
@@ -93,7 +89,7 @@ export default function SignIn({ navigation }) {
                 }}
               >
                 <Text style={{ color: colors.subtext, fontSize: 13, lineHeight: 18 }}>
-                  HustleLedger syncs your accounts in real time with our AI engine. Banking-grade encryption keeps your data safe.
+                  AI-driven wealth concierge. Real-time sync. Military-grade encryption.
                 </Text>
               </LinearGradient>
 
@@ -124,7 +120,7 @@ export default function SignIn({ navigation }) {
               {!!err && <Text style={{ color: colors.danger, marginBottom: spacing(1) }}>{err}</Text>}
 
               <HLButton
-                title={loading ? 'Signing in…' : 'Enter command center'}
+                title={loading ? 'Signing in…' : 'Launch Command Center'}
                 onPress={onSignIn}
                 accessibilityLabel="Sign in to HustleLedger"
               />
@@ -134,9 +130,9 @@ export default function SignIn({ navigation }) {
               onPress={() => navigation.replace('SignUp')}
               textColor={colors.accent1}
               style={{ marginTop: spacing(2) }}
-              accessibilityLabel="Create a new account"
+              accessibilityLabel="Activate a new account"
             >
-              Create an account
+              Activate New Account
             </Button>
           </View>
         </ScrollView>
