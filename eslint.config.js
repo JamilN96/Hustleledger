@@ -14,7 +14,7 @@ const compat = new FlatCompat({
 
 export default [
   {
-    ignores: ['node_modules/**', 'android/**']
+    ignores: ['node_modules/**', 'android/**', 'vendor/**']
   },
   ...compat.config({
     extends: ['eslint:recommended']
@@ -37,9 +37,7 @@ export default [
         requestAnimationFrame: 'readonly',
         require: 'readonly',
         setTimeout: 'readonly',
-        clearTimeout: 'readonly',
-        setInterval: 'readonly',
-        clearInterval: 'readonly'
+        clearTimeout: 'readonly'
       }
     },
     plugins: {
@@ -64,7 +62,24 @@ export default [
     }
   },
   {
+<<<<<<< HEAD
+    files: ['.eslintrc.js', 'scripts/**/*.js'],
+    languageOptions: {
+      sourceType: 'script',
+      globals: {
+        console: 'readonly',
+        module: 'writable',
+        process: 'readonly',
+        require: 'readonly',
+        __dirname: 'readonly',
+      },
+    },
+  },
+  {
     files: ['babel.config.js'],
+=======
+    files: ['babel.config.js', '.eslintrc.js'],
+>>>>>>> d3018ae8 (feat(ui): tech-styled glass card with futuristic input fields)
     languageOptions: {
       sourceType: 'script',
       globals: {
@@ -76,25 +91,26 @@ export default [
     }
   },
   {
-    files: ['.eslintrc.js', 'scripts/**/*.js', 'vendor/**/*.js'],
+    files: ['scripts/**/*.js'],
     languageOptions: {
       sourceType: 'script',
       globals: {
-        module: 'writable',
-        require: 'readonly',
+        console: 'readonly',
+        module: 'readonly',
         process: 'readonly',
-        global: 'readonly',
-        __dirname: 'readonly'
+        require: 'readonly'
       }
     }
   },
   {
-    files: ['__tests__/**/*.js'],
+    files: ['**/__tests__/**/*.{js,jsx,ts,tsx}', '**/*.test.{js,jsx,ts,tsx}'],
     languageOptions: {
       globals: {
         describe: 'readonly',
         it: 'readonly',
-        expect: 'readonly'
+        expect: 'readonly',
+        beforeEach: 'readonly',
+        jest: 'readonly'
       }
     }
   },
