@@ -1,18 +1,10 @@
-<<<<<<< HEAD
-import { useEffect, useMemo, useState } from 'react';
-=======
 import { useEffect, useState } from 'react';
->>>>>>> d3018ae8 (feat(ui): tech-styled glass card with futuristic input fields)
 import {
   KeyboardAvoidingView,
   Platform,
   View,
   Text as RNText,
   ScrollView,
-<<<<<<< HEAD
-  StyleSheet,
-=======
->>>>>>> d3018ae8 (feat(ui): tech-styled glass card with futuristic input fields)
   Pressable,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -127,67 +119,6 @@ export default function SignIn({ navigation }) {
           }
         />
 
-<<<<<<< HEAD
-        <SafeAreaView style={styles.flex}>
-          <ScrollView
-            contentContainerStyle={{ padding: spacing(2), paddingBottom: spacing(4), flexGrow: 1 }}
-            keyboardShouldPersistTaps="handled"
-          >
-            <View style={styles.contentWrapper}>
-              <View style={styles.heroArea}>
-                <LinearGradient
-                  colors={['rgba(88, 213, 247, 0.2)', 'rgba(161, 140, 255, 0.14)']}
-                  start={{ x: 0, y: 0.5 }}
-                  end={{ x: 1, y: 0.5 }}
-                  style={styles.badgeGlow}
-                >
-                  <Chip
-                    accessibilityLabel="HustleLedger concierge badge"
-                    style={[
-                      styles.badge,
-                      {
-                        borderColor: colors.accent2,
-                        backgroundColor: badgeBackground,
-                      },
-                    ]}
-                    textStyle={{ color: colors.accent2, fontWeight: '600' }}
-                  >
-                    AI Wealth Concierge
-                  </Chip>
-                </LinearGradient>
-
-                <RNText
-                  style={[
-                    styles.brandTitle,
-                    { color: isDark ? '#F7F9FF' : '#151B38' },
-                  ]}
-                  accessibilityRole="header"
-                  accessibilityLabel="HustleLedger"
-                  allowFontScaling
-                >
-                  HustleLedger
-                </RNText>
-
-                <RNText
-                  style={[
-                    styles.heroHeadline,
-                    { color: isDark ? '#E1E7FF' : '#1E2450' },
-                  ]}
-                  allowFontScaling
-                >
-                  Welcome back, Innovator.
-                </RNText>
-
-                <Text
-                  style={[
-                    styles.heroDescription,
-                    { color: subtextColor },
-                  ]}
-                  allowFontScaling
-                >
-                  Sync your hustles in real time with AI. Automate cash flow, optimize savings, and stay aligned with your
-                  goals.
-=======
             <GlassCard accessibilityLabel="Sign in to HustleLedger command deck">
               <LinearGradient
                 colors={[`${colors.accent1}22`, `${colors.accent2}11`]}
@@ -202,36 +133,9 @@ export default function SignIn({ navigation }) {
               >
                 <Text style={{ color: colors.subtext, fontSize: 13, lineHeight: 18 }}>
                   HustleLedger syncs your accounts in real time with our AI engine. Banking-grade encryption keeps your data safe.
->>>>>>> d3018ae8 (feat(ui): tech-styled glass card with futuristic input fields)
                 </Text>
               </View>
 
-<<<<<<< HEAD
-              <GlassCard accessibilityLabel="Sign in to HustleLedger">
-                <LinearGradient
-                  colors={[cardBorder, 'transparent']}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                  style={styles.helperGradient}
-                >
-                  <Text style={{ color: subtextColor, fontSize: 13, lineHeight: 18 }} allowFontScaling>
-                    HustleLedger syncs your accounts in real time with our AI engine. Banking-grade encryption keeps your
-                    data safe.
-                  </Text>
-                </LinearGradient>
-
-                <TextInput
-                  label="Email"
-                  value={email}
-                  onChangeText={setEmail}
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                  style={styles.input}
-                  mode="flat"
-                  theme={inputTheme}
-                  accessibilityLabel="Email address"
-                />
-=======
               <View style={{ marginBottom: spacing(2) }}>
                 <View
                   style={{
@@ -348,7 +252,6 @@ export default function SignIn({ navigation }) {
               >
                 <Text style={{ color: colors.accent2, fontWeight: '600' }}>Forgot Secure Key?</Text>
               </Pressable>
->>>>>>> d3018ae8 (feat(ui): tech-styled glass card with futuristic input fields)
 
                 <TextInput
                   label="Password"
