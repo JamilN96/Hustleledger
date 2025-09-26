@@ -1,13 +1,6 @@
-<<<<<<< HEAD
-import React from 'react';
-import { View, Text, AppState } from 'react-native';
-=======
-// app/screens/AppLock.js
-import { useEffect, useState } from 'react';
-import { View, Alert, Platform } from 'react-native';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Alert, AppState, Platform, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
->>>>>>> 53fbc4eaf50aa56101b353f9eb128c405a27dff9
 import * as LocalAuthentication from 'expo-local-authentication';
 import { useIsFocused } from '@react-navigation/native';
 import HLButton from '../components/HLButton';
@@ -16,16 +9,19 @@ import { useColors, spacing } from '../lib/theme';
 export default function AppLock({ navigation }) {
   const colors = useColors();
   const isFocused = useIsFocused();
+  const promptingRef = useRef(false);
+  const mountedRef = useRef(true);
+  const [checking, setChecking] = useState(true);
+  const [available, setAvailable] = useState(false);
+  const [enrolled, setEnrolled] = useState(false);
 
-<<<<<<< HEAD
-  // guards
-  const promptingRef = React.useRef(false);
-  const mountedRef = React.useRef(true);
-
-  React.useEffect(() => {
+  useEffect(() => {
     mountedRef.current = true;
-    return () => { mountedRef.current = false; };
-=======
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+
   useEffect(() => {
     (async () => {
       try {
@@ -41,88 +37,98 @@ export default function AppLock({ navigation }) {
         setChecking(false);
       }
     })();
->>>>>>> 53fbc4eaf50aa56101b353f9eb128c405a27dff9
   }, []);
 
-  // OPTIONAL: if you were prompting automatically on focus, keep it,
-  // but we add guards + tiny delay so the modal doesn't conflict with mounting.
-  React.useEffect(() => {
-    if (!isFocused) return;
-    const t = setTimeout(() => {
-      if (!promptingRef.current) promptAuth();
-    }, 250);
-    return () => clearTimeout(t);
-  }, [isFocused]);
+  const promptAuth = useCallback(async () => {
+    if (promptingRef.current || !mountedRef.current) {
+      return;
+    }
 
-  // If app goes background during prompt (user switches apps / lock screen),
-  // we reset the guard when it comes back.
-  React.useEffect(() => {
-    const sub = AppState.addEventListener('change', (state) => {
-      if (state === 'active') {
-        // allow prompting again when returning
-        promptingRef.current = false;
-      }
-    });
-    return () => sub.remove();
-  }, []);
-
-  async function promptAuth() {
     try {
-      if (promptingRef.current || !mountedRef.current) return;
       promptingRef.current = true;
 
-      const hasHardware = await LocalAuthentication.hasHardwareAsync();
-      const isEnrolled = await LocalAuthentication.isEnrolledAsync();
-
-      if (!hasHardware || !isEnrolled) {
-        // Show a message or fall back to a PIN screen you control
-        promptingRef.current = false;
+      if (!available || !enrolled) {
+        Alert.alert(
+          'Authentication unavailable',
+          'Enable biometrics on your device to unlock HustleLedger.',
+        );
         return;
       }
 
-      // --- Test 1: turn OFF device fallback to see if crash stops.
-      // If this works (no crash), the crash was from passcode fallback timing.
       const result = await LocalAuthentication.authenticateAsync({
         promptMessage: 'Unlock HustleLedger',
         cancelLabel: 'Cancel',
-        // TEST mode: Face ID only (no passcode sheet). Flip to false later.
-        disableDeviceFallback: true,
+        disableDeviceFallback: Platform.OS === 'ios',
         requireConfirmation: false,
       });
 
-      if (!mountedRef.current) return;
+      if (!mountedRef.current) {
+        return;
+      }
 
       if (result.success) {
-        // Don't navigate while the system sheet is still closing.
         setTimeout(() => {
-          if (mountedRef.current) navigation.replace('RootTabs');
+          if (mountedRef.current) {
+            navigation.replace('RootTabs');
+          }
         }, 150);
-      } else {
-        // user cancel / system cancel / lockout. Stay on AppLock.
-        // console.log('Auth failed:', result);
       }
-<<<<<<< HEAD
-    } catch (e) {
-      // Prevent crash by swallowing any unexpected throws
-      console.log('Auth exception:', e?.message);
-    } finally {
-      promptingRef.current = false;
-=======
     } catch (error) {
       if (__DEV__) {
-        console.warn('Biometric authentication failed to start', error);
+        console.warn('Biometric authentication error', error);
       }
-      Alert.alert('Error', 'Could not start authentication.');
->>>>>>> 53fbc4eaf50aa56101b353f9eb128c405a27dff9
+      Alert.alert('Error', 'Could not start biometric authentication.');
+    } finally {
+      promptingRef.current = false;
     }
-  }
+  }, [available, enrolled, navigation]);
+
+  useEffect(() => {
+    if (!isFocused || checking || !available || !enrolled) {
+      return;
+    }
+    const timer = setTimeout(() => {
+      if (!promptingRef.current) {
+        promptAuth();
+      }
+    }, 250);
+    return () => clearTimeout(timer);
+  }, [available, checking, enrolled, isFocused, promptAuth]);
+
+  useEffect(() => {
+    const sub = AppState.addEventListener('change', (state) => {
+      if (state === 'active') {
+        promptingRef.current = false;
+      }
+    });
+    return () => {
+      sub.remove();
+    };
+  }, []);
+
+  const subtitle = !available
+    ? 'Biometric hardware is unavailable on this device.'
+    : !enrolled
+      ? 'Add a Face ID or fingerprint in system settings to continue.'
+      : 'Authenticate to unlock your financial cockpit.';
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', padding: spacing(3), backgroundColor: colors.bg }}>
-      <Text style={{ color: colors.text, fontSize: 20, marginBottom: spacing(2) }}>
-        Unlock with Face ID
-      </Text>
-      <HLButton title="Unlock" onPress={promptAuth} />
-    </View>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.bg }}>
+      <View style={{ flex: 1, justifyContent: 'center', padding: spacing(3) }}>
+        <Text style={{ color: colors.text, fontSize: 24, fontWeight: '700', marginBottom: spacing(1) }}>
+          Unlock with biometrics
+        </Text>
+        <Text style={{ color: colors.subtext, lineHeight: 20, marginBottom: spacing(3) }}>
+          {checking ? 'Checking device security…' : subtitle}
+        </Text>
+        <HLButton
+          title={checking ? 'Please wait' : 'Unlock'}
+          onPress={promptAuth}
+          disabled={checking}
+          accessibilityLabel="Unlock HustleLedger"
+          accessibilityRole="button"
+        />
+      </View>
+    </SafeAreaView>
   );
 }

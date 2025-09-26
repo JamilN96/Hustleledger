@@ -1,5 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Dashboard from '../screens/Dashboard';
+import Budget from '../screens/Budget';
 import Settings from '../screens/Settings';
 import GlassTabBar from '../components/GlassTabBar';
 import { useColors } from '../lib/theme';
@@ -30,9 +31,10 @@ export default function RootTabs() {
       sceneContainerStyle={{ backgroundColor: colors.bgSecondary + '33' }}
     >
       <Tab.Screen name="DashboardTab" component={Dashboard} />
-      <Tab.Screen name="InsightsTab"  children={() => <Placeholder title="Insights (AI)" />} />
-      <Tab.Screen name="AccountsTab"  children={() => <Placeholder title="Accounts" />} />
-      <Tab.Screen name="SettingsTab"  component={Settings} />
+      <Tab.Screen name="BudgetTab" component={Budget} />
+      <Tab.Screen name="InsightsTab" children={() => <Placeholder title="Insights (AI)" />} />
+      <Tab.Screen name="AccountsTab" children={() => <Placeholder title="Accounts" />} />
+      <Tab.Screen name="SettingsTab" component={Settings} />
     </Tab.Navigator>
   );
 }
