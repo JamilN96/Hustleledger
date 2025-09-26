@@ -1,5 +1,6 @@
-describe('sanity check', () => {
-  it('confirms the test runner works', () => {
-    expect(true).toBe(true);
-  });
+import assert from 'node:assert/strict';
+import test from 'node:test';
+
+test('sanity check runs', () => {
+  assert.equal(true, true);
 });
