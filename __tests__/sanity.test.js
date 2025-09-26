@@ -1,5 +1,8 @@
+const { describe, it } = require('node:test');
+const assert = require('node:assert/strict');
+
 describe('sanity check', () => {
   it('confirms the test runner works', () => {
-    expect(true).toBe(true);
+    assert.equal(true, true);
   });
 });

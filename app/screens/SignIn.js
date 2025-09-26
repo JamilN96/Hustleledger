@@ -30,11 +30,7 @@ export default function SignIn({ navigation }) {
       await signInWithEmailAndPassword(auth, email.trim(), pw);
       navigation.replace('AppLock');
     } catch (error) {
-<<<<<<< HEAD
-      setErr(error.message || 'Sign in failed');
-=======
       setErr(error?.message || 'Sign in failed');
->>>>>>> 53fbc4eaf50aa56101b353f9eb128c405a27dff9
     } finally {
       setLoading(false);
     }

@@ -14,7 +14,7 @@ const compat = new FlatCompat({
 
 export default [
   {
-    ignores: ['node_modules/**', 'android/**']
+    ignores: ['node_modules/**', 'android/**', 'vendor/**']
   },
   ...compat.config({
     extends: ['eslint:recommended']
@@ -35,7 +35,9 @@ export default [
         console: 'readonly',
         fetch: 'readonly',
         requestAnimationFrame: 'readonly',
-        require: 'readonly'
+        require: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly'
       }
     },
     plugins: {
@@ -60,7 +62,7 @@ export default [
     }
   },
   {
-    files: ['babel.config.js'],
+    files: ['babel.config.js', '.eslintrc.js', 'scripts/**/*.js'],
     languageOptions: {
       sourceType: 'script',
       globals: {
@@ -90,6 +92,21 @@ export default [
         process: 'readonly',
         require: 'readonly',
         __dirname: 'readonly'
+      }
+    }
+  },
+  {
+    files: ['__tests__/**/*.js'],
+    languageOptions: {
+      globals: {
+        describe: 'readonly',
+        it: 'readonly',
+        expect: 'readonly',
+        beforeAll: 'readonly',
+        afterAll: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
+        jest: 'readonly'
       }
     }
   }

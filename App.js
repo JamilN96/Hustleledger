@@ -13,15 +13,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-<<<<<<< HEAD
-=======
-try {
-  require('./app/config.local');
-} catch {
-  // Optional local overrides for development only
-}
-
->>>>>>> 53fbc4eaf50aa56101b353f9eb128c405a27dff9
 import { useColors, radii } from './app/lib/theme';
 
 import SignIn from './app/screens/SignIn';
@@ -33,7 +24,9 @@ import LinkBank from './app/screens/LinkBank';
 // Optional local config (silently ignored if missing)
 try {
   require('./app/config.local');
-} catch {}
+} catch {
+  // noop
+}
 
 const Stack = createNativeStackNavigator();
 
@@ -83,13 +76,7 @@ export default function App() {
             accessibilityLabel="Premium neon backdrop"
           >
             <NavigationContainer>
-<<<<<<< HEAD
-              <Stack.Navigator
-                screenOptions={{ headerShown: false, animation: 'fade_from_bottom' }}
-              >
-=======
               <Stack.Navigator screenOptions={{ headerShown: false, animation: 'fade_from_bottom' }}>
->>>>>>> 53fbc4eaf50aa56101b353f9eb128c405a27dff9
                 <Stack.Screen name="SignIn" component={SignIn} />
                 <Stack.Screen name="SignUp" component={SignUp} />
                 <Stack.Screen name="AppLock" component={AppLock} />
