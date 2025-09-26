@@ -1,10 +1,11 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Dashboard from '../screens/Dashboard';
+import Budgets from '../screens/Budgets';
 import Settings from '../screens/Settings';
 import GlassTabBar from '../components/GlassTabBar';
 import { useColors } from '../lib/theme';
 
-// simple placeholder for Insights & Accounts
+// simple placeholder for Accounts until data wiring lands
 import { View } from 'react-native';
 import { Text } from 'react-native-paper';
 const Placeholder = ({ title }) => {
@@ -30,9 +31,9 @@ export default function RootTabs() {
       sceneContainerStyle={{ backgroundColor: colors.bgSecondary + '33' }}
     >
       <Tab.Screen name="DashboardTab" component={Dashboard} />
-      <Tab.Screen name="InsightsTab"  children={() => <Placeholder title="Insights (AI)" />} />
-      <Tab.Screen name="AccountsTab"  children={() => <Placeholder title="Accounts" />} />
-      <Tab.Screen name="SettingsTab"  component={Settings} />
+      <Tab.Screen name="BudgetsTab" component={Budgets} options={{ tabBarLabel: 'Budgets' }} />
+      <Tab.Screen name="AccountsTab" children={() => <Placeholder title="Accounts" />} />
+      <Tab.Screen name="SettingsTab" component={Settings} />
     </Tab.Navigator>
   );
 }

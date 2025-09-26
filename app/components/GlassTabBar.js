@@ -18,8 +18,8 @@ export default function GlassTabBar({ state, descriptors, navigation }) {
             if (!isFocused && !event.defaultPrevented) navigation.navigate(route.name);
           };
           const icon = route.name === 'DashboardTab' ? 'speedometer' :
-                       route.name === 'InsightsTab'  ? 'sparkles'   :
-                       route.name === 'AccountsTab'  ? 'wallet'     : 'settings';
+                       route.name === 'BudgetsTab'   ? 'stats-chart' :
+                       route.name === 'AccountsTab'  ? 'wallet' : 'settings';
 
           return (
             <Pressable
