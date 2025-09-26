@@ -1,0 +1,6 @@
+{
+  "name": "expo-haptics",
+  "version": "0.0.0-test",
+  "type": "module",
+  "exports": "./index.js"
+}
