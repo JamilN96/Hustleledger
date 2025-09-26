@@ -13,15 +13,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-<<<<<<< HEAD
-=======
 try {
   require('./app/config.local');
 } catch {
   // Optional local overrides for development only
 }
 
->>>>>>> 53fbc4eaf50aa56101b353f9eb128c405a27dff9
 import { useColors, radii } from './app/lib/theme';
 
 import SignIn from './app/screens/SignIn';
@@ -29,11 +26,6 @@ import SignUp from './app/screens/SignUp';
 import AppLock from './app/screens/AppLock';
 import RootTabs from './app/navigation/RootTabs';
 import LinkBank from './app/screens/LinkBank';
-
-// Optional local config (silently ignored if missing)
-try {
-  require('./app/config.local');
-} catch {}
 
 const Stack = createNativeStackNavigator();
 
@@ -49,7 +41,7 @@ export default function App() {
     roundness: radii.md,
     colors: {
       ...DefaultTheme.colors,
-      primary: colors.primary,    // accent color from theme
+      primary: colors.primary, // accent color from theme
       onSurface: colors.text,
       surface: 'transparent',
       background: colors.background,
@@ -83,13 +75,7 @@ export default function App() {
             accessibilityLabel="Premium neon backdrop"
           >
             <NavigationContainer>
-<<<<<<< HEAD
-              <Stack.Navigator
-                screenOptions={{ headerShown: false, animation: 'fade_from_bottom' }}
-              >
-=======
               <Stack.Navigator screenOptions={{ headerShown: false, animation: 'fade_from_bottom' }}>
->>>>>>> 53fbc4eaf50aa56101b353f9eb128c405a27dff9
                 <Stack.Screen name="SignIn" component={SignIn} />
                 <Stack.Screen name="SignUp" component={SignUp} />
                 <Stack.Screen name="AppLock" component={AppLock} />

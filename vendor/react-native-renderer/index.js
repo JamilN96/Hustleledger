@@ -1,3 +1,4 @@
+/* eslint-env node */
 'use strict';
 
 const isProfiling = typeof global !== 'undefined' && global.__PROFILE__ === true;

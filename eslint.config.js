@@ -35,7 +35,11 @@ export default [
         console: 'readonly',
         fetch: 'readonly',
         requestAnimationFrame: 'readonly',
-        require: 'readonly'
+        require: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        setInterval: 'readonly',
+        clearInterval: 'readonly'
       }
     },
     plugins: {
@@ -68,6 +72,29 @@ export default [
         require: 'readonly',
         __dirname: 'readonly',
         process: 'readonly'
+      }
+    }
+  },
+  {
+    files: ['.eslintrc.js', 'scripts/**/*.js', 'vendor/**/*.js'],
+    languageOptions: {
+      sourceType: 'script',
+      globals: {
+        module: 'writable',
+        require: 'readonly',
+        process: 'readonly',
+        global: 'readonly',
+        __dirname: 'readonly'
+      }
+    }
+  },
+  {
+    files: ['__tests__/**/*.js'],
+    languageOptions: {
+      globals: {
+        describe: 'readonly',
+        it: 'readonly',
+        expect: 'readonly'
       }
     }
   },
