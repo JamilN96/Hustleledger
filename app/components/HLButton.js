@@ -2,7 +2,14 @@ import { useEffect } from 'react';
 import { Pressable, Text } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { LinearGradient } from 'expo-linear-gradient';
-import Animated, { useSharedValue, useAnimatedStyle, withRepeat, withTiming, Easing } from 'react-native-reanimated';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withRepeat,
+  withTiming,
+  withSpring,
+  Easing,
+} from 'react-native-reanimated';
 import { useColors, radii, spacing } from '../lib/theme';
 
 export default function HLButton({
@@ -14,6 +21,7 @@ export default function HLButton({
 }) {
   const colors = useColors();
   const glow = useSharedValue(0.6);
+  const scale = useSharedValue(1);
 
   useEffect(() => {
     glow.value = withRepeat(withTiming(1, { duration: 1800, easing: Easing.inOut(Easing.quad) }), -1, true);
@@ -21,12 +29,29 @@ export default function HLButton({
 
   const aStyle = useAnimatedStyle(() => ({
     shadowOpacity: glow.value * 0.7,
+    transform: [{ scale: scale.value }],
   }));
 
   const handlePress = async () => {
     if (disabled) return;
-    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     onPress && onPress();
+  };
+
+  const handlePressIn = () => {
+    scale.value = withSpring(0.94, {
+      stiffness: 220,
+      damping: 18,
+      mass: 0.4,
+    });
+  };
+
+  const handlePressOut = () => {
+    scale.value = withSpring(1, {
+      stiffness: 180,
+      damping: 16,
+      mass: 0.6,
+    });
   };
 
   return (
@@ -37,6 +62,8 @@ export default function HLButton({
     }, aStyle, style]}>
       <Pressable
         onPress={handlePress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
         disabled={disabled}
         accessibilityRole="button"
         accessibilityLabel={accessibilityLabel || title}

@@ -1,3 +1,5 @@
+/* eslint-env node */
+
 const { runCLI } = require('@jest/core');
 
 (async () => {

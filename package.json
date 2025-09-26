@@ -26,9 +26,6 @@
   },
   "scripts": {
     "android": "expo run:android",
-<<<<<<< HEAD
-    "ios": "expo run:ios"
-=======
     "ios": "expo run:ios",
     "dev:client": "expo start --dev-client",
     "dev:client:tunnel": "expo start --dev-client --tunnel",
@@ -45,6 +42,5 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-native": "^5.0.0",
     "rimraf": "^5.0.0"
->>>>>>> 53fbc4eaf50aa56101b353f9eb128c405a27dff9
   }
 }
