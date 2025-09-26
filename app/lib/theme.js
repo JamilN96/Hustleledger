@@ -38,18 +38,6 @@ export const useColors = () => {
   }
 
   return {
-<<<<<<< HEAD
-    ...shared,
-    bg: '#FFFFFF',
-    bgSecondary: '#F2F2F7',
-    bgGradient: ['#f4f7ff', '#e6ecff', '#dce4ff'],
-    text: '#151B38',
-    subtext: 'rgba(22, 30, 62, 0.72)',
-    card: 'rgba(255, 255, 255, 0.88)',
-    cardBorder: 'rgba(130, 115, 255, 0.24)',
-    cardOutline: 'rgba(161, 140, 255, 0.16)',
-    danger: '#D93F6E',
-=======
     // Backgrounds
     bg: isDark ? '#000000' : '#FFFFFF',
     background: isDark ? '#05060b' : '#f8f9ff',
@@ -72,6 +60,5 @@ export const useColors = () => {
     cardBorder: isDark ? 'rgba(88, 213, 247, 0.35)' : 'rgba(88, 213, 247, 0.2)',
     cardOutline: isDark ? 'rgba(161, 140, 255, 0.4)' : 'rgba(161, 140, 255, 0.16)',
     inputBackground: isDark ? 'rgba(9, 14, 29, 0.6)' : 'rgba(255, 255, 255, 0.88)',
->>>>>>> d3018ae8 (feat(ui): tech-styled glass card with futuristic input fields)
   };
 };
