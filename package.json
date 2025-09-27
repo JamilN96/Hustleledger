@@ -26,6 +26,7 @@
     "react-native-worklets-core": "1.5.0"
   },
   "scripts": {
+    "start": "node node_modules/expo/bin/cli start",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "dev:client": "expo start --dev-client",
