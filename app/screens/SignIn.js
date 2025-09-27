@@ -3,7 +3,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   View,
-  Text as RNText,
   ScrollView,
   Pressable,
 } from 'react-native';
@@ -302,7 +301,7 @@ export default function SignIn({ navigation }) {
                 </Text>
               </Pressable>
 
-              <RNText
+              <Text
                 style={[
                   styles.tagline,
                   { color: taglineColor },
@@ -310,7 +309,7 @@ export default function SignIn({ navigation }) {
                 allowFontScaling
               >
                 Banking-grade security. AI-driven growth.
-              </RNText>
+              </Text>
             </View>
           </ScrollView>
         </SafeAreaView>

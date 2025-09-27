@@ -1,6 +1,6 @@
 // app/screens/SignUp.js
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, View, Text as RNText, ScrollView } from 'react-native';
+import { KeyboardAvoidingView, Platform, View, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { TextInput, Text, Button, Chip } from 'react-native-paper';
@@ -58,7 +58,7 @@ export default function SignUp({ navigation }) {
               >
                 Launch your AI CFO
               </Chip>
-              <RNText
+              <Text
                 style={{
                   color: colors.text,
                   fontSize: 32,
@@ -68,7 +68,7 @@ export default function SignUp({ navigation }) {
                 }}
               >
                 Create your HustleLedger account
-              </RNText>
+              </Text>
               <Text style={{ color: colors.subtext, marginTop: spacing(1.25), lineHeight: 20 }}>
                 Get automated forecasting, expense intelligence, and daily cash rituals tailored to your side hustles.
               </Text>
