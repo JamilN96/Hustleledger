@@ -2,27 +2,20 @@
 import 'react-native-gesture-handler';
 import 'react-native-reanimated';
 
-import { useEffect } from 'react';
-import { StatusBar, View, Appearance } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Appearance, StatusBar, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
-  Provider as PaperProvider,
   MD3LightTheme as DefaultTheme,
+  Provider as PaperProvider,
 } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-<<<<<<< HEAD
+import { onAuthStateChanged } from 'firebase/auth';
 
-try {
-  require('./app/config.local');
-} catch {
-  // Optional local overrides for development only
-}
-
-=======
->>>>>>> d3018ae8 (feat(ui): tech-styled glass card with futuristic input fields)
 import { useColors, radii } from './app/lib/theme';
+import { auth } from './app/lib/firebase';
 
 import SignIn from './app/screens/SignIn';
 import SignUp from './app/screens/SignUp';
@@ -31,8 +24,6 @@ import RootTabs from './app/navigation/RootTabs';
 import LinkBank from './app/screens/LinkBank';
 import ForgotPassword from './app/screens/ForgotPassword';
 
-<<<<<<< HEAD
-=======
 // Optional local overrides for development only (silently ignored if missing)
 try {
   require('./app/config.local');
@@ -40,18 +31,33 @@ try {
   // no-op
 }
 
->>>>>>> d3018ae8 (feat(ui): tech-styled glass card with futuristic input fields)
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   const colors = useColors();
+  const [authChecked, setAuthChecked] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user);
+      setAuthChecked(true);
+    });
+
+    return unsubscribe;
+  }, []);
 
   useEffect(() => {
     const sub = Appearance.addChangeListener(() => {
       // noop; forces re-render when system theme changes
     });
+
     return () => sub.remove();
   }, []);
+
+  if (!authChecked) {
+    return null;
+  }
 
   const gradient = colors.bgGradient ?? [colors.bg, colors.bgSecondary ?? colors.bg];
   const containerTint = colors.bgSecondary ?? colors.bg;
@@ -69,6 +75,7 @@ export default function App() {
   };
 
   const barStyle = Appearance.getColorScheme() === 'dark' ? 'light-content' : 'dark-content';
+  const initialRouteName = currentUser ? 'AppLock' : 'SignIn';
 
   return (
     <SafeAreaProvider>
@@ -86,14 +93,17 @@ export default function App() {
             accessibilityRole="summary"
             accessibilityLabel="Premium neon backdrop"
           >
-            <NavigationContainer>
-              <Stack.Navigator screenOptions={{ headerShown: false, animation: 'fade_from_bottom' }}>
+            <NavigationContainer key={currentUser ? 'auth' : 'guest'}>
+              <Stack.Navigator
+                screenOptions={{ headerShown: false, animation: 'fade_from_bottom' }}
+                initialRouteName={initialRouteName}
+              >
                 <Stack.Screen name="SignIn" component={SignIn} />
                 <Stack.Screen name="SignUp" component={SignUp} />
+                <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
                 <Stack.Screen name="AppLock" component={AppLock} />
                 <Stack.Screen name="RootTabs" component={RootTabs} />
                 <Stack.Screen name="LinkBank" component={LinkBank} />
-                <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
               </Stack.Navigator>
             </NavigationContainer>
           </View>
