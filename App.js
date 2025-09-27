@@ -11,17 +11,6 @@ import {
 } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-<<<<<<< HEAD
-
-try {
-  require('./app/config.local');
-} catch {
-  // Optional local overrides for development only
-}
-
-=======
->>>>>>> d3018ae8 (feat(ui): tech-styled glass card with futuristic input fields)
 import { useColors, radii } from './app/lib/theme';
 
 import SignIn from './app/screens/SignIn';
@@ -31,16 +20,14 @@ import RootTabs from './app/navigation/RootTabs';
 import LinkBank from './app/screens/LinkBank';
 import ForgotPassword from './app/screens/ForgotPassword';
 
-<<<<<<< HEAD
-=======
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+
 // Optional local overrides for development only (silently ignored if missing)
 try {
   require('./app/config.local');
 } catch {
-  // no-op
+  // Optional local overrides for development only
 }
-
->>>>>>> d3018ae8 (feat(ui): tech-styled glass card with futuristic input fields)
 const Stack = createNativeStackNavigator();
 
 export default function App() {
