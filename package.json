@@ -12,6 +12,7 @@
     "expo-local-authentication": "~17.0.7",
     "expo-status-bar": "~1.12.1",
     "firebase": "^12.3.0",
+    "js-yaml": "4.1.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-native": "0.81.4",
@@ -25,6 +26,9 @@
     "react-native-worklets": "0.5.1",
     "react-native-worklets-core": "1.5.0"
   },
+  "overrides": {
+    "js-yaml": "4.1.0"
+  },
   "scripts": {
     "android": "expo run:android",
     "ios": "expo run:ios",
@@ -33,7 +37,10 @@
     "fix:clean": "rimraf node_modules package-lock.json && npm i",
     "fix:expo-go": "npx expo install react-native-reanimated && npm i react-native-worklets-core@1.5.0 --save-exact",
     "lint": "eslint .",
-    "test": "cross-env node ./testing/run-tests.cjs"
+    "test": "cross-env node ./testing/run-tests.cjs",
+    "clean:deps": "rimraf node_modules package-lock.json || rmdir /s /q node_modules && del package-lock.json",
+    "reinstall": "npm install",
+    "start:clean": "npx expo start -c"
   },
   "devDependencies": {
     "@eslint/js": "^9.18.0",

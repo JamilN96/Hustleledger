@@ -62,7 +62,6 @@ export default [
     }
   },
   {
-<<<<<<< HEAD
     files: ['.eslintrc.js', 'scripts/**/*.js'],
     languageOptions: {
       sourceType: 'script',
@@ -71,15 +70,12 @@ export default [
         module: 'writable',
         process: 'readonly',
         require: 'readonly',
-        __dirname: 'readonly',
-      },
-    },
+        __dirname: 'readonly'
+      }
+    }
   },
   {
     files: ['babel.config.js'],
-=======
-    files: ['babel.config.js', '.eslintrc.js'],
->>>>>>> d3018ae8 (feat(ui): tech-styled glass card with futuristic input fields)
     languageOptions: {
       sourceType: 'script',
       globals: {
@@ -87,18 +83,6 @@ export default [
         require: 'readonly',
         __dirname: 'readonly',
         process: 'readonly'
-      }
-    }
-  },
-  {
-    files: ['scripts/**/*.js'],
-    languageOptions: {
-      sourceType: 'script',
-      globals: {
-        console: 'readonly',
-        module: 'readonly',
-        process: 'readonly',
-        require: 'readonly'
       }
     }
   },
