@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -6,6 +6,7 @@ import {
   Text as RNText,
   ScrollView,
   Pressable,
+  StyleSheet,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -55,8 +56,10 @@ export default function SignIn({ navigation }) {
   );
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (u) => {
-      if (u) navigation.replace('AppLock');
+    const unsub = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        navigation.replace('AppLock');
+      }
     });
     return () => unsub();
   }, [navigation]);
@@ -119,22 +122,61 @@ export default function SignIn({ navigation }) {
           }
         />
 
+        <SafeAreaView style={styles.flex}>
+          <ScrollView
+            contentContainerStyle={[styles.contentWrapper, { padding: spacing(3), gap: spacing(3) }]}
+            keyboardShouldPersistTaps="handled"
+            bounces={false}
+          >
+            <View style={styles.heroArea}>
+              <View
+                style={[
+                  styles.badgeGlow,
+                  {
+                    backgroundColor: `${colors.accent2}1A`,
+                    shadowColor: colors.accent2,
+                  },
+                ]}
+              >
+                <Chip
+                  style={[styles.badge, { borderColor: cardBorder, backgroundColor: badgeBackground }]}
+                  textStyle={{ color: colors.accent1, fontWeight: '600', letterSpacing: 0.8 }}
+                  compact
+                >
+                  Welcome back
+                </Chip>
+              </View>
+              <Text
+                style={[styles.brandTitle, { color: colors.text }]}
+                allowFontScaling
+              >
+                HustleLedger
+              </Text>
+              <Text
+                style={[styles.heroHeadline, { color: colors.text }]}
+                allowFontScaling
+              >
+                Command your finances with confidence
+              </Text>
+              <Text
+                style={[styles.heroDescription, { color: subtextColor }]}
+                allowFontScaling
+              >
+                Sign in to sync accounts, monitor cash flow, and keep your ledgers on autopilot.
+              </Text>
+            </View>
+
             <GlassCard accessibilityLabel="Sign in to HustleLedger command deck">
               <LinearGradient
                 colors={[`${colors.accent1}22`, `${colors.accent2}11`]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
-                style={{
-                  borderRadius: radii.lg,
-                  padding: spacing(1.75),
-                  marginBottom: spacing(2.5),
-                  backgroundColor: 'rgba(255,255,255,0.04)',
-                }}
+                style={styles.helperGradient}
               >
-                <Text style={{ color: colors.subtext, fontSize: 13, lineHeight: 18 }}>
+                <Text style={{ color: subtextColor, fontSize: 13, lineHeight: 18 }} allowFontScaling>
                   HustleLedger syncs your accounts in real time with our AI engine. Banking-grade encryption keeps your data safe.
                 </Text>
-              </View>
+              </LinearGradient>
 
               <View style={{ marginBottom: spacing(2) }}>
                 <View
@@ -142,10 +184,7 @@ export default function SignIn({ navigation }) {
                     borderRadius: radii.md,
                     backgroundColor: colors.inputBackground,
                     borderWidth: 1,
-                    borderColor:
-                      focusedField === 'email'
-                        ? `${colors.accent2}88`
-                        : colors.cardOutline,
+                    borderColor: focusedField === 'email' ? `${colors.accent2}88` : colors.cardOutline,
                     overflow: 'hidden',
                   }}
                 >
@@ -196,10 +235,7 @@ export default function SignIn({ navigation }) {
                     borderRadius: radii.md,
                     backgroundColor: colors.inputBackground,
                     borderWidth: 1,
-                    borderColor:
-                      focusedField === 'password'
-                        ? `${colors.accent1}88`
-                        : colors.cardBorder,
+                    borderColor: focusedField === 'password' ? `${colors.accent1}88` : colors.cardBorder,
                     overflow: 'hidden',
                   }}
                 >
@@ -223,7 +259,7 @@ export default function SignIn({ navigation }) {
                     contentStyle={{ fontSize: 16 }}
                     underlineColor="transparent"
                     activeUnderlineColor="transparent"
-                    theme={{ colors: { onSurfaceVariant: colors.subtext } }}
+                    theme={inputTheme}
                     accessibilityLabel="Enter your password"
                   />
                 </View>
@@ -250,68 +286,52 @@ export default function SignIn({ navigation }) {
                 accessibilityRole="button"
                 accessibilityLabel="Recover your secure key"
               >
-                <Text style={{ color: colors.accent2, fontWeight: '600' }}>Forgot Secure Key?</Text>
-              </Pressable>
-
-                <TextInput
-                  label="Password"
-                  value={pw}
-                  onChangeText={setPw}
-                  secureTextEntry
-                  textContentType="oneTimeCode"
-                  style={styles.input}
-                  mode="flat"
-                  theme={inputTheme}
-                  accessibilityLabel="Password"
-                />
-
-                {!!err && (
-                  <Text style={{ color: dangerColor, marginBottom: spacing(1) }} allowFontScaling>
-                    {err}
-                  </Text>
-                )}
-
-                <HLButton
-                  title={loading ? 'Signing in…' : 'Enter Command Center'}
-                  onPress={onSignIn}
-                  accessibilityLabel="Sign in to HustleLedger"
-                />
-              </GlassCard>
-
-              <Pressable
-                onPress={() => navigation.replace('SignUp')}
-                accessibilityRole="link"
-                accessibilityLabel="Create your HustleLedger account"
-                style={({ pressed }) => [
-                  styles.secondaryLink,
-                  {
-                    backgroundColor: secondaryLinkBg,
-                    shadowColor: colors.accent1,
-                    opacity: pressed ? 0.75 : 1,
-                  },
-                ]}
-              >
-                <Text
-                  style={[
-                    styles.secondaryLinkText,
-                    { color: secondaryLinkText },
-                  ]}
-                  allowFontScaling
-                >
-                  Create Your Account
+                <Text style={{ color: colors.accent2, fontWeight: '600' }} allowFontScaling>
+                  Forgot Secure Key?
                 </Text>
               </Pressable>
 
-              <RNText
-                style={[
-                  styles.tagline,
-                  { color: taglineColor },
-                ]}
+              {!!err && (
+                <Text style={{ color: dangerColor, marginBottom: spacing(1) }} allowFontScaling>
+                  {err}
+                </Text>
+              )}
+
+              <HLButton
+                title={loading ? 'Signing in…' : 'Enter Command Center'}
+                onPress={onSignIn}
+                accessibilityLabel="Sign in to HustleLedger"
+                disabled={loading}
+              />
+            </GlassCard>
+
+            <Pressable
+              onPress={() => navigation.replace('SignUp')}
+              accessibilityRole="link"
+              accessibilityLabel="Create your HustleLedger account"
+              style={({ pressed }) => [
+                styles.secondaryLink,
+                {
+                  backgroundColor: secondaryLinkBg,
+                  shadowColor: colors.accent1,
+                  opacity: pressed ? 0.75 : 1,
+                },
+              ]}
+            >
+              <Text
+                style={[styles.secondaryLinkText, { color: secondaryLinkText }]}
                 allowFontScaling
               >
-                Banking-grade security. AI-driven growth.
-              </RNText>
-            </View>
+                Create Your Account
+              </Text>
+            </Pressable>
+
+            <RNText
+              style={[styles.tagline, { color: taglineColor }]}
+              allowFontScaling
+            >
+              Banking-grade security. AI-driven growth.
+            </RNText>
           </ScrollView>
         </SafeAreaView>
       </LinearGradient>
@@ -406,11 +426,11 @@ function AnimatedGridlines({ gridColors }) {
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   contentWrapper: {
-    flex: 1,
+    flexGrow: 1,
     justifyContent: 'center',
   },
   heroArea: {
-    marginBottom: spacing(3),
+    marginBottom: spacing(1),
     alignItems: 'center',
     gap: spacing(1.5),
   },
@@ -449,13 +469,9 @@ const styles = StyleSheet.create({
     marginBottom: spacing(2),
     backgroundColor: 'rgba(255,255,255,0.04)',
   },
-  input: {
-    marginBottom: spacing(1.5),
-    backgroundColor: 'transparent',
-  },
   secondaryLink: {
     alignSelf: 'center',
-    marginTop: spacing(3),
+    marginTop: spacing(1),
     borderRadius: radii.xl,
     paddingVertical: spacing(1),
     paddingHorizontal: spacing(2.5),
@@ -468,7 +484,7 @@ const styles = StyleSheet.create({
   },
   tagline: {
     textAlign: 'center',
-    marginTop: spacing(4),
+    marginTop: spacing(2.5),
     fontSize: 12,
     letterSpacing: 0.8,
   },
