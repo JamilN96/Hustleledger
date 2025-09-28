@@ -62,7 +62,6 @@ export default [
     }
   },
   {
-<<<<<<< HEAD
     files: ['.eslintrc.js', 'scripts/**/*.js'],
     languageOptions: {
       sourceType: 'script',
@@ -77,9 +76,6 @@ export default [
   },
   {
     files: ['babel.config.js'],
-=======
-    files: ['babel.config.js', '.eslintrc.js'],
->>>>>>> d3018ae8 (feat(ui): tech-styled glass card with futuristic input fields)
     languageOptions: {
       sourceType: 'script',
       globals: {
