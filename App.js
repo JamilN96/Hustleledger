@@ -3,26 +3,17 @@ import 'react-native-gesture-handler';
 import 'react-native-reanimated';
 
 import { useEffect } from 'react';
-import { StatusBar, View, Appearance } from 'react-native';
+import { Appearance, StatusBar, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
-  Provider as PaperProvider,
   MD3LightTheme as DefaultTheme,
+  Provider as PaperProvider,
 } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-<<<<<<< HEAD
 
-try {
-  require('./app/config.local');
-} catch {
-  // Optional local overrides for development only
-}
-
-=======
->>>>>>> d3018ae8 (feat(ui): tech-styled glass card with futuristic input fields)
-import { useColors, radii } from './app/lib/theme';
+import { radii, useColors } from './app/lib/theme';
 
 import SignIn from './app/screens/SignIn';
 import SignUp from './app/screens/SignUp';
@@ -31,8 +22,6 @@ import RootTabs from './app/navigation/RootTabs';
 import LinkBank from './app/screens/LinkBank';
 import ForgotPassword from './app/screens/ForgotPassword';
 
-<<<<<<< HEAD
-=======
 // Optional local overrides for development only (silently ignored if missing)
 try {
   require('./app/config.local');
@@ -40,7 +29,6 @@ try {
   // no-op
 }
 
->>>>>>> d3018ae8 (feat(ui): tech-styled glass card with futuristic input fields)
 const Stack = createNativeStackNavigator();
 
 export default function App() {
