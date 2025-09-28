@@ -33,7 +33,7 @@
     "fix:clean": "rimraf node_modules package-lock.json && npm i",
     "fix:expo-go": "npx expo install react-native-reanimated && npm i react-native-worklets-core@1.5.0 --save-exact",
     "lint": "eslint .",
-    "test": "cross-env node ./testing/run-tests.cjs"
+    "test": "node ./testing/run-tests.cjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.18.0",
