@@ -1,5 +1,7 @@
+node_modules/
 .expo/
-node_modules/
+.expo-shared/
+ios/build/
+android/app/build/
 /app/config.local.js
-node_modules/
 coverage/
