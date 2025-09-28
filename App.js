@@ -12,16 +12,6 @@ import {
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-<<<<<<< HEAD
-
-try {
-  require('./app/config.local');
-} catch {
-  // Optional local overrides for development only
-}
-
-=======
->>>>>>> d3018ae8 (feat(ui): tech-styled glass card with futuristic input fields)
 import { useColors, radii } from './app/lib/theme';
 
 import SignIn from './app/screens/SignIn';
@@ -30,17 +20,14 @@ import AppLock from './app/screens/AppLock';
 import RootTabs from './app/navigation/RootTabs';
 import LinkBank from './app/screens/LinkBank';
 import ForgotPassword from './app/screens/ForgotPassword';
+import Welcome from './app/screens/Welcome';
 
-<<<<<<< HEAD
-=======
 // Optional local overrides for development only (silently ignored if missing)
 try {
   require('./app/config.local');
 } catch {
-  // no-op
+  // Optional local overrides for development only
 }
-
->>>>>>> d3018ae8 (feat(ui): tech-styled glass card with futuristic input fields)
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -88,6 +75,7 @@ export default function App() {
           >
             <NavigationContainer>
               <Stack.Navigator screenOptions={{ headerShown: false, animation: 'fade_from_bottom' }}>
+                <Stack.Screen name="Welcome" component={Welcome} options={{ headerShown: false }} />
                 <Stack.Screen name="SignIn" component={SignIn} />
                 <Stack.Screen name="SignUp" component={SignUp} />
                 <Stack.Screen name="AppLock" component={AppLock} />
