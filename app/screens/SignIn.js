@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -6,6 +6,7 @@ import {
   Text as RNText,
   ScrollView,
   Pressable,
+  StyleSheet,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -84,13 +85,6 @@ export default function SignIn({ navigation }) {
     }
   };
 
-  const inputTheme = {
-    colors: {
-      onSurfaceVariant: subtextColor,
-      primary: colors.accent1,
-    },
-  };
-
   const badgeBackground = isDark ? 'rgba(12, 16, 48, 0.45)' : 'rgba(240, 244, 255, 0.6)';
   const secondaryLinkBg = isDark ? 'rgba(12, 16, 48, 0.24)' : 'rgba(247, 249, 255, 0.72)';
   const secondaryLinkText = isDark ? '#A18CFF' : '#5B4FE6';
@@ -119,151 +113,182 @@ export default function SignIn({ navigation }) {
           }
         />
 
-            <GlassCard accessibilityLabel="Sign in to HustleLedger command deck">
-              <LinearGradient
-                colors={[`${colors.accent1}22`, `${colors.accent2}11`]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={{
-                  borderRadius: radii.lg,
-                  padding: spacing(1.75),
-                  marginBottom: spacing(2.5),
-                  backgroundColor: 'rgba(255,255,255,0.04)',
-                }}
-              >
-                <Text style={{ color: colors.subtext, fontSize: 13, lineHeight: 18 }}>
-                  HustleLedger syncs your accounts in real time with our AI engine. Banking-grade encryption keeps your data safe.
+        <SafeAreaView style={styles.flex}>
+          <ScrollView
+            contentContainerStyle={[
+              styles.contentWrapper,
+              { padding: spacing(3), paddingBottom: spacing(6) },
+            ]}
+            keyboardShouldPersistTaps="handled"
+          >
+            <View style={{ gap: spacing(3) }}>
+              <View style={styles.heroArea}>
+                <LinearGradient
+                  colors={[`${colors.accent1}33`, `${colors.accent2}22`]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={[styles.badgeGlow, { shadowColor: colors.accent2 }]}
+                >
+                  <Chip
+                    mode="outlined"
+                    style={[
+                      styles.badge,
+                      {
+                        backgroundColor: badgeBackground,
+                        borderColor: colors.cardOutline ?? 'rgba(255,255,255,0.18)',
+                      },
+                    ]}
+                    textStyle={{ color: colors.text, fontSize: 12, fontWeight: '600', letterSpacing: 0.5 }}
+                    accessibilityRole="text"
+                  >
+                    Multi-ledger sync
+                  </Chip>
+                </LinearGradient>
+
+                <RNText style={[styles.brandTitle, { color: colors.text }]} allowFontScaling>
+                  HustleLedger
+                </RNText>
+                <Text style={[styles.heroHeadline, { color: colors.text }]} allowFontScaling>
+                  Orchestrate every cash flow.
+                </Text>
+                <Text
+                  style={[styles.heroDescription, { color: subtextColor }]}
+                  allowFontScaling
+                >
+                  Automate savings, reconcile payouts, and keep each venture in perfect formation.
                 </Text>
               </View>
 
-              <View style={{ marginBottom: spacing(2) }}>
-                <View
-                  style={{
-                    borderRadius: radii.md,
-                    backgroundColor: colors.inputBackground,
-                    borderWidth: 1,
-                    borderColor:
+              <GlassCard accessibilityLabel="Sign in to HustleLedger command deck">
+                <LinearGradient
+                  colors={[`${colors.accent1}22`, `${colors.accent2}11`]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.helperGradient}
+                >
+                  <Text style={{ color: subtextColor, fontSize: 13, lineHeight: 18 }} allowFontScaling>
+                    HustleLedger syncs your accounts in real time with our AI engine. Banking-grade encryption keeps your data safe.
+                  </Text>
+                </LinearGradient>
+
+                <View style={{ marginBottom: spacing(2) }}>
+                  <View
+                    style={{
+                      borderRadius: radii.md,
+                      backgroundColor: colors.inputBackground,
+                      borderWidth: 1,
+                      borderColor:
+                        focusedField === 'email'
+                          ? `${colors.accent2}88`
+                          : colors.cardOutline,
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <TextInput
+                      label="Your Access ID"
+                      value={email}
+                      onChangeText={setEmail}
+                      autoCapitalize="none"
+                      keyboardType="email-address"
+                      onFocus={() => handleFocus('email')}
+                      onBlur={handleBlur}
+                      mode="flat"
+                      left={
+                        <TextInput.Icon
+                          icon="email-outline"
+                          color={focusedField === 'email' ? colors.accent2 : colors.subtext}
+                        />
+                      }
+                      textColor={colors.text}
+                      style={{ backgroundColor: 'transparent' }}
+                      contentStyle={{ fontSize: 16 }}
+                      underlineColor="transparent"
+                      activeUnderlineColor="transparent"
+                      theme={{ colors: { onSurfaceVariant: colors.subtext } }}
+                      accessibilityLabel="Enter your email"
+                    />
+                  </View>
+                  <LinearGradient
+                    colors={
                       focusedField === 'email'
-                        ? `${colors.accent2}88`
-                        : colors.cardOutline,
-                    overflow: 'hidden',
-                  }}
-                >
-                  <TextInput
-                    label="Your Access ID"
-                    value={email}
-                    onChangeText={setEmail}
-                    autoCapitalize="none"
-                    keyboardType="email-address"
-                    onFocus={() => handleFocus('email')}
-                    onBlur={handleBlur}
-                    mode="flat"
-                    left={
-                      <TextInput.Icon
-                        icon="email-outline"
-                        color={focusedField === 'email' ? colors.accent2 : colors.subtext}
-                      />
+                        ? [colors.accent1, colors.accent2]
+                        : ['rgba(161, 140, 255, 0.35)', 'rgba(88, 213, 247, 0.35)']
                     }
-                    textColor={colors.text}
-                    style={{ backgroundColor: 'transparent' }}
-                    contentStyle={{ fontSize: 16 }}
-                    underlineColor="transparent"
-                    activeUnderlineColor="transparent"
-                    theme={{ colors: { onSurfaceVariant: colors.subtext } }}
-                    accessibilityLabel="Enter your email"
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
+                    style={{
+                      height: 3,
+                      borderRadius: 999,
+                      marginTop: spacing(0.5),
+                      opacity: focusedField === 'email' ? 1 : 0.5,
+                    }}
                   />
                 </View>
-                <LinearGradient
-                  colors={
-                    focusedField === 'email'
-                      ? [colors.accent1, colors.accent2]
-                      : ['rgba(161, 140, 255, 0.35)', 'rgba(88, 213, 247, 0.35)']
-                  }
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                  style={{
-                    height: 3,
-                    borderRadius: 999,
-                    marginTop: spacing(0.5),
-                    opacity: focusedField === 'email' ? 1 : 0.5,
-                  }}
-                />
-              </View>
 
-              <View style={{ marginBottom: spacing(1.5) }}>
-                <View
-                  style={{
-                    borderRadius: radii.md,
-                    backgroundColor: colors.inputBackground,
-                    borderWidth: 1,
-                    borderColor:
+                <View style={{ marginBottom: spacing(1.5) }}>
+                  <View
+                    style={{
+                      borderRadius: radii.md,
+                      backgroundColor: colors.inputBackground,
+                      borderWidth: 1,
+                      borderColor:
+                        focusedField === 'password'
+                          ? `${colors.accent1}88`
+                          : cardBorder,
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <TextInput
+                      label="Secure Key"
+                      value={pw}
+                      onChangeText={setPw}
+                      secureTextEntry
+                      textContentType="oneTimeCode"
+                      onFocus={() => handleFocus('password')}
+                      onBlur={handleBlur}
+                      mode="flat"
+                      left={
+                        <TextInput.Icon
+                          icon="lock-outline"
+                          color={focusedField === 'password' ? colors.accent1 : colors.subtext}
+                        />
+                      }
+                      textColor={colors.text}
+                      style={{ backgroundColor: 'transparent' }}
+                      contentStyle={{ fontSize: 16 }}
+                      underlineColor="transparent"
+                      activeUnderlineColor="transparent"
+                      theme={{ colors: { onSurfaceVariant: colors.subtext } }}
+                      accessibilityLabel="Enter your password"
+                    />
+                  </View>
+                  <LinearGradient
+                    colors={
                       focusedField === 'password'
-                        ? `${colors.accent1}88`
-                        : colors.cardBorder,
-                    overflow: 'hidden',
-                  }}
-                >
-                  <TextInput
-                    label="Secure Key"
-                    value={pw}
-                    onChangeText={setPw}
-                    secureTextEntry
-                    textContentType="oneTimeCode"
-                    onFocus={() => handleFocus('password')}
-                    onBlur={handleBlur}
-                    mode="flat"
-                    left={
-                      <TextInput.Icon
-                        icon="lock-outline"
-                        color={focusedField === 'password' ? colors.accent1 : colors.subtext}
-                      />
+                        ? [colors.accent2, colors.accent1]
+                        : ['rgba(88, 213, 247, 0.35)', 'rgba(161, 140, 255, 0.35)']
                     }
-                    textColor={colors.text}
-                    style={{ backgroundColor: 'transparent' }}
-                    contentStyle={{ fontSize: 16 }}
-                    underlineColor="transparent"
-                    activeUnderlineColor="transparent"
-                    theme={{ colors: { onSurfaceVariant: colors.subtext } }}
-                    accessibilityLabel="Enter your password"
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
+                    style={{
+                      height: 3,
+                      borderRadius: 999,
+                      marginTop: spacing(0.5),
+                      opacity: focusedField === 'password' ? 1 : 0.5,
+                    }}
                   />
                 </View>
-                <LinearGradient
-                  colors={
-                    focusedField === 'password'
-                      ? [colors.accent2, colors.accent1]
-                      : ['rgba(88, 213, 247, 0.35)', 'rgba(161, 140, 255, 0.35)']
-                  }
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                  style={{
-                    height: 3,
-                    borderRadius: 999,
-                    marginTop: spacing(0.5),
-                    opacity: focusedField === 'password' ? 1 : 0.5,
-                  }}
-                />
-              </View>
 
-              <Pressable
-                onPress={() => navigation.navigate('ForgotPassword')}
-                style={{ alignSelf: 'flex-end', marginBottom: spacing(2) }}
-                accessibilityRole="button"
-                accessibilityLabel="Recover your secure key"
-              >
-                <Text style={{ color: colors.accent2, fontWeight: '600' }}>Forgot Secure Key?</Text>
-              </Pressable>
-
-                <TextInput
-                  label="Password"
-                  value={pw}
-                  onChangeText={setPw}
-                  secureTextEntry
-                  textContentType="oneTimeCode"
-                  style={styles.input}
-                  mode="flat"
-                  theme={inputTheme}
-                  accessibilityLabel="Password"
-                />
+                <Pressable
+                  onPress={() => navigation.navigate('ForgotPassword')}
+                  style={{ alignSelf: 'flex-end', marginBottom: spacing(2) }}
+                  accessibilityRole="button"
+                  accessibilityLabel="Recover your secure key"
+                >
+                  <Text style={{ color: colors.accent2, fontWeight: '600' }} allowFontScaling>
+                    Forgot Secure Key?
+                  </Text>
+                </Pressable>
 
                 {!!err && (
                   <Text style={{ color: dangerColor, marginBottom: spacing(1) }} allowFontScaling>
@@ -406,7 +431,7 @@ function AnimatedGridlines({ gridColors }) {
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   contentWrapper: {
-    flex: 1,
+    flexGrow: 1,
     justifyContent: 'center',
   },
   heroArea: {
@@ -448,10 +473,6 @@ const styles = StyleSheet.create({
     padding: spacing(1.5),
     marginBottom: spacing(2),
     backgroundColor: 'rgba(255,255,255,0.04)',
-  },
-  input: {
-    marginBottom: spacing(1.5),
-    backgroundColor: 'transparent',
   },
   secondaryLink: {
     alignSelf: 'center',
