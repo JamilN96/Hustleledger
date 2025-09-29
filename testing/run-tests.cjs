@@ -8,9 +8,16 @@ const passthroughArgs = process.argv
 
 const loaderPath = path.resolve(__dirname, 'react-native-loader.mjs');
 
-const child = spawn(process.execPath, ['--test', '--loader', loaderPath, ...passthroughArgs], {
+const mockPath = path.resolve(__dirname, '__mocks__');
+const nodePath = process.env.NODE_PATH
+  ? `${mockPath}${path.delimiter}${process.env.NODE_PATH}`
+  : mockPath;
+
+const registerPath = path.resolve(__dirname, 'register-mocks.cjs');
+
+const child = spawn(process.execPath, ['--require', registerPath, '--test', '--loader', loaderPath, ...passthroughArgs], {
   stdio: 'inherit',
-  env: process.env,
+  env: { ...process.env, NODE_PATH: nodePath },
 });
 
 child.on('exit', (code) => process.exit(code ?? 0));
