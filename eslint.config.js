@@ -1,24 +1,25 @@
 import { createRequire } from 'node:module';
 import { FlatCompat } from '@eslint/eslintrc';
-
-const require = createRequire(import.meta.url);
-const recommendedConfig = require('./config/eslint/eslint-recommended.cjs');
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import reactNativePlugin from 'eslint-plugin-react-native';
 
+const require = createRequire(import.meta.url);
+const recommendedConfig = require('./config/eslint/eslint-recommended.cjs');
+
 const compat = new FlatCompat({
   baseDirectory: import.meta.dirname,
-  recommendedConfig
+  recommendedConfig,
 });
 
 export default [
   {
-    ignores: ['node_modules/**', 'android/**', 'vendor/**']
+    ignores: ['node_modules/**', 'android/**', 'vendor/**'],
   },
   ...compat.config({
-    extends: ['eslint:recommended']
+    extends: ['eslint:recommended'],
   }),
+  ...compat.config(recommendedConfig),
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
     languageOptions: {
@@ -26,8 +27,8 @@ export default [
       sourceType: 'module',
       parserOptions: {
         ecmaFeatures: {
-          jsx: true
-        }
+          jsx: true,
+        },
       },
       globals: {
         __DEV__: 'readonly',
@@ -37,18 +38,18 @@ export default [
         requestAnimationFrame: 'readonly',
         require: 'readonly',
         setTimeout: 'readonly',
-        clearTimeout: 'readonly'
-      }
+        clearTimeout: 'readonly',
+      },
     },
     plugins: {
       react: reactPlugin,
       'react-hooks': reactHooksPlugin,
-      'react-native': reactNativePlugin
+      'react-native': reactNativePlugin,
     },
     settings: {
       react: {
-        version: 'detect'
-      }
+        version: 'detect',
+      },
     },
     rules: {
       'react/react-in-jsx-scope': 'off',
@@ -58,37 +59,20 @@ export default [
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
       'react-native/no-unused-styles': 'error',
-      'react-native/no-inline-styles': 'off'
-    }
-  },
-  {
-<<<<<<< HEAD
-    files: ['.eslintrc.js', 'scripts/**/*.js'],
-    languageOptions: {
-      sourceType: 'script',
-      globals: {
-        console: 'readonly',
-        module: 'writable',
-        process: 'readonly',
-        require: 'readonly',
-        __dirname: 'readonly',
-      },
+      'react-native/no-inline-styles': 'off',
     },
   },
   {
-    files: ['babel.config.js'],
-=======
     files: ['babel.config.js', '.eslintrc.js'],
->>>>>>> d3018ae8 (feat(ui): tech-styled glass card with futuristic input fields)
     languageOptions: {
       sourceType: 'script',
       globals: {
         module: 'writable',
         require: 'readonly',
         __dirname: 'readonly',
-        process: 'readonly'
-      }
-    }
+        process: 'readonly',
+      },
+    },
   },
   {
     files: ['scripts/**/*.js'],
@@ -98,9 +82,9 @@ export default [
         console: 'readonly',
         module: 'readonly',
         process: 'readonly',
-        require: 'readonly'
-      }
-    }
+        require: 'readonly',
+      },
+    },
   },
   {
     files: ['**/__tests__/**/*.{js,jsx,ts,tsx}', '**/*.test.{js,jsx,ts,tsx}'],
@@ -110,18 +94,18 @@ export default [
         it: 'readonly',
         expect: 'readonly',
         beforeEach: 'readonly',
-        jest: 'readonly'
-      }
-    }
+        jest: 'readonly',
+      },
+    },
   },
   {
     files: ['testing/**/*.mjs'],
     languageOptions: {
       sourceType: 'module',
       globals: {
-        URL: 'readonly'
-      }
-    }
+        URL: 'readonly',
+      },
+    },
   },
   {
     files: ['testing/**/*.cjs'],
@@ -132,8 +116,8 @@ export default [
         module: 'readonly',
         process: 'readonly',
         require: 'readonly',
-        __dirname: 'readonly'
-      }
-    }
-  }
+        __dirname: 'readonly',
+      },
+    },
+  },
 ];
