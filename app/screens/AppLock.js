@@ -1,9 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-<<<<<<< HEAD
-import { View, Text, Alert, AppState, Platform } from 'react-native';
-=======
 import { AppState, Alert, Platform, Text, View } from 'react-native';
->>>>>>> d3018ae8 (feat(ui): tech-styled glass card with futuristic input fields)
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as LocalAuthentication from 'expo-local-authentication';
@@ -41,47 +37,11 @@ export default function AppLock({ navigation }) {
           console.warn('Biometric availability check failed', error);
         }
       } finally {
-<<<<<<< HEAD
-        if (mountedRef.current) setChecking(false);
-=======
         if (mountedRef.current) {
           setChecking(false);
         }
->>>>>>> d3018ae8 (feat(ui): tech-styled glass card with futuristic input fields)
       }
     })();
-  }, []);
-
-  useEffect(() => {
-<<<<<<< HEAD
-    if (!isFocused || checking || !available || !enrolled) return;
-    const timeout = setTimeout(() => {
-      if (!promptingRef.current) promptAuth();
-    }, 250);
-    return () => clearTimeout(timeout);
-  }, [isFocused, checking, available, enrolled, promptAuth]);
-
-=======
-    if (!isFocused || !available || !enrolled) return;
-
-    const timer = setTimeout(() => {
-      if (!promptingRef.current) {
-        void promptAuth();
-      }
-    }, 250);
-
-    return () => clearTimeout(timer);
-  }, [isFocused, available, enrolled, promptAuth]);
-
->>>>>>> d3018ae8 (feat(ui): tech-styled glass card with futuristic input fields)
-  useEffect(() => {
-    const sub = AppState.addEventListener('change', (state) => {
-      if (state === 'active') {
-        promptingRef.current = false;
-      }
-    });
-
-    return () => sub.remove();
   }, []);
 
   const promptAuth = useCallback(async () => {
@@ -92,11 +52,7 @@ export default function AppLock({ navigation }) {
       if (!available || !enrolled) {
         Alert.alert(
           'Biometrics unavailable',
-<<<<<<< HEAD
           'Enable Face ID or Touch ID in your device settings to unlock HustleLedger.',
-=======
-          'Set up Face ID or Touch ID in your system settings to unlock HustleLedger.'
->>>>>>> d3018ae8 (feat(ui): tech-styled glass card with futuristic input fields)
         );
         return;
       }
@@ -121,12 +77,39 @@ export default function AppLock({ navigation }) {
       if (__DEV__) {
         console.warn('Biometric authentication failed', error);
       }
-<<<<<<< HEAD
-      Alert.alert('Error', 'Could not start authentication.');
+      Alert.alert('Error', 'Could not start authentication. Please try again.');
     } finally {
       promptingRef.current = false;
     }
   }, [available, checking, enrolled, navigation]);
+
+  useEffect(() => {
+    if (!isFocused || checking || !available || !enrolled) return;
+
+    const timer = setTimeout(() => {
+      if (!promptingRef.current) {
+        void promptAuth();
+      }
+    }, 250);
+
+    return () => clearTimeout(timer);
+  }, [isFocused, checking, available, enrolled, promptAuth]);
+
+  useEffect(() => {
+    const sub = AppState.addEventListener('change', (state) => {
+      if (state === 'active') {
+        promptingRef.current = false;
+      }
+    });
+
+    return () => sub.remove();
+  }, []);
+
+  const helperText = !available
+    ? 'Biometric hardware is not available on this device.'
+    : !enrolled
+    ? 'Add Face ID or Touch ID in settings to unlock instantly.'
+    : 'Use biometrics to keep your data encrypted.';
 
   return (
     <LinearGradient
@@ -162,6 +145,11 @@ export default function AppLock({ navigation }) {
           >
             Authenticate with Face ID to resume your AI-guided wealth strategy.
           </Text>
+          {!checking && (
+            <Text style={{ color: colors.subtext, textAlign: 'center', lineHeight: 20 }} allowFontScaling>
+              {helperText}
+            </Text>
+          )}
           <HLButton
             title={checking ? 'Preparing…' : 'Unlock'}
             onPress={promptAuth}
@@ -171,45 +159,5 @@ export default function AppLock({ navigation }) {
         </View>
       </SafeAreaView>
     </LinearGradient>
-=======
-      Alert.alert('Error', 'Could not start authentication. Please try again.');
-    } finally {
-      promptingRef.current = false;
-    }
-  }, [available, enrolled, navigation]);
-
-  const helperText = !available
-    ? 'Biometric hardware is not available on this device.'
-    : !enrolled
-    ? 'Add Face ID or Touch ID in settings to unlock instantly.'
-    : 'Use biometrics to keep your data encrypted.';
-
-  return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.bg }}>
-      <LinearGradient
-        colors={[colors.bg, colors.bgSecondary]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={{ flex: 1, padding: spacing(3), justifyContent: 'center' }}
-      >
-        <View style={{ gap: spacing(2) }}>
-          <Text style={{ color: colors.text, fontSize: 24, fontWeight: '700' }}>
-            Authenticate to continue
-          </Text>
-          {!checking && (
-            <Text style={{ color: colors.subtext, fontSize: 15, lineHeight: 20 }}>
-              {helperText}
-            </Text>
-          )}
-          <HLButton
-            title={checking ? 'Checking biometrics…' : 'Unlock with Face ID'}
-            onPress={promptAuth}
-            disabled={checking || !available || !enrolled}
-            accessibilityLabel="Unlock HustleLedger with biometrics"
-          />
-        </View>
-      </LinearGradient>
-    </SafeAreaView>
->>>>>>> d3018ae8 (feat(ui): tech-styled glass card with futuristic input fields)
   );
 }
